@@ -9,7 +9,8 @@ class GetGameMovesRequest (
 
 class NewGameMoveRequest (
     val move: Int,
-    val gameKey: UUID
+    val apiKey: UUID,
+    val uuid: UUID
 )
 
 class GameMoveResponse (

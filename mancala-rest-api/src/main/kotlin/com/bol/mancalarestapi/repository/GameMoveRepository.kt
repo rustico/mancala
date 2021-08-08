@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository
 import java.util.UUID
 
 interface GameMoveRepository: CrudRepository<GameMove, Int> {
-    fun findAllByGameKeyOrderById(game: UUID): Iterable<GameMove>
+    fun findAllByGameApiKeyOrderById(game: UUID): Iterable<GameMove>
 }

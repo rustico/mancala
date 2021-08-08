@@ -1,18 +1,27 @@
 package com.bol.mancalarestapi.dto
 
-import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 import java.util.UUID
-import javax.persistence.Column
 
 class NewGameRequest (
     val playerOne: String,
-    val playerTwo: String?
+)
+
+class JoinGameRequest (
+    val playerTwo: String
 )
 
 class GameResponse (
-    val key: UUID,
+    val uuid: UUID,
+    val playerOne: String,
+    val playerTwo: String?,
+    val createdAt: LocalDateTime?,
+    val updatedAt: LocalDateTime?
+)
+
+class NewGameResponse (
+    val uuid: UUID,
+    val apiKey: UUID,
     val playerOne: String,
     val playerTwo: String?,
     val createdAt: LocalDateTime?,

@@ -17,14 +17,17 @@ class Game (
     val id: Int? = null,
 
     @Column(nullable = false)
-    val key: UUID, // Key to access the game
+    val uuid: UUID = UUID.randomUUID(),
+
+    @Column(nullable = false)
+    val apiKey: UUID = UUID.randomUUID(), // Key to access the game
 
     @Column(nullable = false)
     val playerOne: String,
 
-    val playerTwo: String? = null,
+    var playerTwo: String? = null,
 
-    val winner: Int? = null,
+    var winner: Int? = null,
 
     @CreationTimestamp
     val createdAt: LocalDateTime? = null,

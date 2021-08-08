@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/gamesmoves")
 class GameMoveController (private val gameMoveService: GameMoveService) {
-    @GetMapping()
+    @GetMapping
     fun getGameMoves(@RequestBody getGameMovesRequest: GetGameMovesRequest): List<GameMoveResponse> {
         return gameMoveService.findAllByGameKey(getGameMovesRequest)
     }

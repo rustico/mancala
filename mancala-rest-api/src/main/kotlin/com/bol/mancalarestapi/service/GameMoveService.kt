@@ -15,12 +15,12 @@ class GameMoveService(private val gameMoveRepository: GameMoveRepository,
 
     fun findAllByGameKey(getGameMovesRequest: GetGameMovesRequest): List<GameMoveResponse> {
         return gameMoveRepository
-            .findAllByGameKeyOrderById(getGameMovesRequest.gameKey)
+            .findAllByGameApiKeyOrderById(getGameMovesRequest.gameKey)
             .mapIndexed() { index, gameMove -> gameMove.toGameMoveResponse(index) }
     }
 
     fun create(newGameMoveRequest: NewGameMoveRequest) {
-        val game = gameRepository.findByKey(newGameMoveRequest.gameKey)
+        val game = gameRepository.findByApiKeyAndUuid(newGameMoveRequest.apiKey, newGameMoveRequest.uuid)
         val gameMove = GameMove(
             game = game,
             move = newGameMoveRequest.move
