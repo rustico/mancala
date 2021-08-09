@@ -9,9 +9,11 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Column
+import javax.persistence.Table
 
 @Entity
-class Game (
+@Table(name = "games")
+class Game(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Int? = null,
