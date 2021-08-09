@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
-
 @RestController
 @RequestMapping("/games")
 class GameController(private val gameService: GameService) {
@@ -29,9 +28,11 @@ class GameController(private val gameService: GameService) {
     }
 
     @PutMapping("/{uuid}/join/{apiKey}")
-    fun joinGame(@PathVariable uuid: UUID,
-                 @PathVariable apiKey: UUID,
-                 @RequestBody joinGameRequest: JoinGameRequest): NewGameResponse {
+    fun joinGame(
+        @PathVariable uuid: UUID,
+        @PathVariable apiKey: UUID,
+        @RequestBody joinGameRequest: JoinGameRequest
+    ): NewGameResponse {
         return gameService.joinGame(uuid, apiKey, joinGameRequest)
     }
 
