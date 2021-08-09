@@ -21,7 +21,7 @@ class GameMove(
     @JoinColumn(name = "gameId")
     val game: Game,
 
-    val move: Int,
+    val position: Int,
 
     @CreationTimestamp
     val createdAt: LocalDateTime? = null,

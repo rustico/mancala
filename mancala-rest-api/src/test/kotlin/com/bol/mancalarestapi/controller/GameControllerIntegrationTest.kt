@@ -33,7 +33,7 @@ class GameControllerIntegrationTest(
     }
 
     @Test
-    fun `test if we can create a new game and retrieve it`() {
+    fun `test we can create a new game and retrieve it`() {
         // No games
         val emptyEntity = client.getForEntity("/games", List::class.java)
         assertTrue(emptyEntity.hasBody())
@@ -51,10 +51,10 @@ class GameControllerIntegrationTest(
         assertNull(newGameResponse.playerTwo)
 
         // Retrieve game
-        val oneEntity = client.getForEntity("/games", Array<GameResponse>::class.java)
-        assertTrue(oneEntity.hasBody())
-        assertEquals(1, oneEntity.body!!.size)
-        val gameResponse = oneEntity.body!![0]
+        val response = client.getForEntity("/games", Array<GameResponse>::class.java)
+        assertTrue(response.hasBody())
+        assertEquals(1, response.body!!.size)
+        val gameResponse = response.body!![0]
         assertNotNull(gameResponse.uuid)
         assertNotNull(gameResponse.createdAt)
         assertNotNull(gameResponse.updatedAt)

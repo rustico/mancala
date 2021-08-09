@@ -3,18 +3,14 @@ package com.bol.mancalarestapi.dto
 import java.time.LocalDateTime
 import java.util.UUID
 
-class GetGameMovesRequest (
-    val gameKey: UUID
-)
-
-class NewGameMoveRequest (
-    val move: Int,
+class NewGameMoveRequest(
+    val position: Int,
     val apiKey: UUID,
-    val uuid: UUID
+    val gameUuid: UUID
 )
 
-class GameMoveResponse (
+class GameMoveResponse(
     val turn: Int,
-    val move: Int,
+    val position: Int,
     val createdAt: LocalDateTime?
 )
