@@ -12,6 +12,8 @@ group = "com.bol"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+val testcontainersVersion = "1.15.3"
+
 repositories {
     mavenCentral()
 }
@@ -23,9 +25,17 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.junit.jupiter:junit-jupiter:5.7.0")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql")
+
+    implementation("org.postgresql:postgresql")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
+
 }
 
 tasks.withType<KotlinCompile> {
