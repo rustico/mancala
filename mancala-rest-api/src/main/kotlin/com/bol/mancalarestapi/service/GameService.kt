@@ -11,7 +11,6 @@ import com.bol.mancalarestapi.repository.GameRepository
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import java.util.UUID
-import kotlin.jvm.Throws
 
 @Service
 class GameService(private val gameRepository: GameRepository) {
@@ -33,7 +32,7 @@ class GameService(private val gameRepository: GameRepository) {
 
     fun create(newGameRequest: NewGameRequest): NewGameResponse {
         val game = Game(
-            playerOne = newGameRequest.playerOne,
+            playerOneName = newGameRequest.playerOneName,
         )
         return gameRepository.save(game).toNewGameResponse()
     }
@@ -42,18 +41,18 @@ class GameService(private val gameRepository: GameRepository) {
         try {
             val game = gameRepository.findByUuid(gameUuid)
 
-            if (game.playerTwo != null) {
+            if (game.playerTwoName != null) {
                 throw GameAlreadyStartedException()
             }
             if (game.apiKey != apiKey) {
                 throw InvalidAPIKeyException()
             }
 
-            game.playerTwo = joinGameRequest.playerTwo
+            game.playerTwoName = joinGameRequest.playerTwoName
             gameRepository.save(game)
 
             return game.toNewGameResponse()
-            
+
         } catch (e: EmptyResultDataAccessException) {
             throw GameNotFoundException()
         }

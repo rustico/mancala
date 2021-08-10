@@ -1,7 +1,6 @@
 package com.bol.mancalarestapi.controller
 
 import com.bol.mancalarestapi.dto.GameMoveResponse
-import com.bol.mancalarestapi.dto.GameResponse
 import org.junit.jupiter.api.Assertions.*
 import com.bol.mancalarestapi.dto.NewGameMoveRequest
 import com.bol.mancalarestapi.dto.NewGameRequest
@@ -35,7 +34,7 @@ class GameMoveControllerIntegrationTest(
     fun `test we can create a new game move`() {
         // Create one game
         val playerOne = "Bob"
-        val newGameRequest = NewGameRequest(playerOne = playerOne)
+        val newGameRequest = NewGameRequest(playerOneName = playerOne)
         val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
 
         // Create a move
@@ -58,7 +57,7 @@ class GameMoveControllerIntegrationTest(
     fun `test we cannot create a new game move without a valid api key`() {
         // Create one game
         val playerOne = "Bob"
-        val newGameRequest = NewGameRequest(playerOne = playerOne)
+        val newGameRequest = NewGameRequest(playerOneName = playerOne)
         val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
 
         // Create a move
@@ -98,7 +97,7 @@ class GameMoveControllerIntegrationTest(
     fun `test we can get all game moves`() {
         // Create one game
         val playerOne = "Bob"
-        val newGameRequest = NewGameRequest(playerOne = playerOne)
+        val newGameRequest = NewGameRequest(playerOneName = playerOne)
         val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
 
         // Create a move

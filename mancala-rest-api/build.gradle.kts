@@ -26,10 +26,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    implementation("org.postgresql:postgresql")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-
-    implementation("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")

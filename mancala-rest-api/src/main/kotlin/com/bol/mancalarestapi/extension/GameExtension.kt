@@ -6,8 +6,8 @@ import com.bol.mancalarestapi.model.Game
 
 fun Game.toGameResponse() = GameResponse(
     uuid = uuid,
-    playerOne = playerOne,
-    playerTwo = playerTwo,
+    playerOneName = playerOneName,
+    playerTwoName = playerTwoName,
     createdAt = createdAt,
     updatedAt = updatedAt
 )
@@ -15,8 +15,8 @@ fun Game.toGameResponse() = GameResponse(
 fun Game.toNewGameResponse() = NewGameResponse(
     uuid = uuid,
     apiKey = apiKey,
-    playerOne = playerOne,
-    playerTwo = playerTwo,
+    playerOneName = playerOneName,
+    playerTwoName = playerTwoName,
     createdAt = createdAt,
     updatedAt = updatedAt
 )
