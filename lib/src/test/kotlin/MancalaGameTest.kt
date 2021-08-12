@@ -164,8 +164,8 @@ class MancalaGameTest {
              6, 6, 6, 6,  6, 6 [0]
 
         Assert
-        [7]  7, 7, 0, 0, 7, 7,
-             7, 6, 0, 6, 6, 0 [0]
+        [7]  6, 6, 0, 0, 6, 6,
+             6, 6, 0, 6, 6, 6 [0]
         */
         val mancalaGame = MancalaGame(
             playerOne = "Bob",
@@ -176,7 +176,31 @@ class MancalaGameTest {
         mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerOne.index] = 1
         mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerOne.index] = 0
 
-        mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Sixth)
-        assertTrue(intArrayOf(6, 6, 1, 0, 6, 6, 7, 6, 6, 6, 0, 6, 6, 0).contentEquals(mancalaGame.board.toIntArray()))
+        mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Third)
+        assertTrue(intArrayOf(6, 6, 0, 0, 6, 6, 7, 6, 6, 6, 0, 6, 6, 0).contentEquals(mancalaGame.board.toIntArray()))
+    }
+
+    @Test
+    fun `test PlayerTwo captures PlayerOne stones because the last stone of the turn lands an empty pit`() {
+        /*
+        Init
+        [0]  6, 6, 6,  6, 6, 6,
+             6, 6, 1*, 0, 6, 6 [0]
+
+        Assert
+        [7]  6, 6, 6, 0, 6, 6,
+             6, 6, 0, 0, 6, 6 [7]
+        */
+        val mancalaGame = MancalaGame(
+            playerOne = "Bob",
+            playerTwo = "Alice"
+        )
+
+        // Set initial stones
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerTwo.index] = 1
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerTwo.index] = 0
+
+        mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Third)
+        assertTrue(intArrayOf(6, 6, 6, 0, 6, 6, 0, 6, 6, 0, 0, 6, 6, 7).contentEquals(mancalaGame.board.toIntArray()))
     }
 }
