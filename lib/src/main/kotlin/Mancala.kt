@@ -1,8 +1,24 @@
 package lib
 
 /**
- * Main game of Mancala.
+ * Main game logic of Mancala.
  *
+ * We have a board of twelve pits and two banks (bit pits "[0]") in each side where the stones are collected.
+ * Each pit has 6 stones in it and the banks starts without any stone.
+ *
+ *        Player one
+ *  [0]  6, 6, 6, 6, 6, 6,
+ *       6, 6, 6, 6, 6, 6  [0]
+ *        Player two
+ *
+ * This board is represented in a mutable list of integers: [6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0]
+ *
+ * The representation of the list indexes in the board would be:
+ *
+ *        Player one
+ *  [6]  5, 4, 3, 2,   1, 0,
+ *       7, 8, 9, 10, 11, 12  [13]
+ *        Player two
  */
 class MancalaGame (
     var playerTurn: MancalaPlayer = MancalaPlayer.PlayerOne,
