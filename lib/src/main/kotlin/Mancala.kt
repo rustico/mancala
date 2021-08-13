@@ -41,6 +41,10 @@ class MancalaGame (
         }
 
     val board = MutableList(14) { if (it == playerOneBankIndex || it == playerTwoBankIndex) 0 else numberOfStones }
+    val playerOneBoard : MutableList<Int>
+        get() = board.subList(MancalaPlayer.PlayerOne.index, playerOneBankIndex)
+    val playerTwoBoard : MutableList<Int>
+        get() = board.subList(MancalaPlayer.PlayerTwo.index, playerTwoBankIndex)
 
     fun choosePit(player: MancalaPlayer, pit: MancalaPlayerPit) {
         /**
@@ -65,6 +69,8 @@ class MancalaGame (
     private fun distributeStones(player: MancalaPlayer, pit: Int): Boolean {
         /**
          * It distributes the stones in the [pit] chosen by the [player]
+         *
+         * It also checks if a pit is empty, if the player captures opposite stones and if the player earns a new turn
          *
          * @param player: Player that is distributing the stones
          * @param pit: Pit or hole chosen by the player that will distribute its stones
@@ -123,5 +129,12 @@ class MancalaGame (
         }
 
         return anotherTurn
+    }
+
+    fun hasEnded(): Boolean {
+        /**
+         * Return if a game has ended. One of the player should have zero stones in its board
+         */
+        return playerOneBoard.sum() == 0 || playerTwoBoard.sum() == 0
     }
 }

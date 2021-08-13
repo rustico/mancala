@@ -292,4 +292,89 @@ class MancalaGameTest {
             mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Second)
         }
     }
+
+    @Test
+    fun `test get PlayerOne board`() {
+        /*
+        Init
+        [0]  6, 5, 4, 3, 2, 1,
+             6, 6, 6, 6, 6, 6 [0]
+        */
+        val mancalaGame = MancalaGame()
+        mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerOne.index] = 1
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerOne.index] = 2
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerOne.index] = 3
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerOne.index] = 4
+        mancalaGame.board[MancalaPlayerPit.Fifth.index + MancalaPlayer.PlayerOne.index] = 5
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerOne.index] = 6
+
+        assertTrue(intArrayOf(1, 2, 3, 4, 5, 6).contentEquals(mancalaGame.playerOneBoard.toIntArray()))
+    }
+
+    @Test
+    fun `test get PlayerTwo board`() {
+        /*
+        Init
+        [0]  6, 6, 6, 6, 6, 6,
+             1, 2, 3, 4, 5, 6 [0]
+        */
+        val mancalaGame = MancalaGame()
+        mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerTwo.index] = 1
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerTwo.index] = 2
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerTwo.index] = 3
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerTwo.index] = 4
+        mancalaGame.board[MancalaPlayerPit.Fifth.index + MancalaPlayer.PlayerTwo.index] = 5
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerTwo.index] = 6
+
+        assertTrue(intArrayOf(1, 2, 3, 4, 5, 6).contentEquals(mancalaGame.playerTwoBoard.toIntArray()))
+    }
+
+    @Test
+    fun `test check game has not ended`() {
+        /*
+        Init
+        [0]  6, 6, 6, 6, 6, 6,
+             6, 6, 6, 6, 6, 6 [0]
+        */
+        val mancalaGame = MancalaGame()
+        assertFalse(mancalaGame.hasEnded())
+    }
+
+    @Test
+    fun `test check game has ended because PlayerOne doesn't have more stones in its pits`() {
+        /*
+        Init
+        [9]  0, 0, 0, 0, 0, 0,
+             6, 6, 6, 6, 6, 6 [0]
+        */
+        val mancalaGame = MancalaGame()
+        mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fifth.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.playerOneBank = 9
+
+        assertTrue(mancalaGame.hasEnded())
+    }
+
+    @Test
+    fun `test check game has ended because PlayerTwo doesn't have more stones in its pits`() {
+        /*
+        Init
+        [0]  6, 6, 6, 6, 6, 6,
+             6, 6, 6, 6, 6, 6 [9]
+        */
+        val mancalaGame = MancalaGame()
+        mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fifth.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.playerTwoBank = 9
+
+        assertTrue(mancalaGame.hasEnded())
+    }
 }
