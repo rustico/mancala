@@ -69,12 +69,23 @@ class MancalaGame (
         }
     }
 
-    fun choosePitAutoPlayer(pit: MancalaPlayerPit) {
+    fun choosePitIndexAutoPlayer(pitIndex: Int) {
         /**
          * Calls [choosePit] with the player in [playerTurn]
          *
          * It's a nice method to have to fill automatically the history of the game
          */
+        val pit = when (pitIndex) {
+            1 -> MancalaPlayerPit.First
+            2 -> MancalaPlayerPit.Second
+            3 -> MancalaPlayerPit.Third
+            4 -> MancalaPlayerPit.Fourth
+            5 -> MancalaPlayerPit.Fifth
+            6 -> MancalaPlayerPit.Sixth
+            else -> {
+                throw InvalidPitIndex()
+            }
+        }
         choosePit(playerTurn, pit)
     }
 

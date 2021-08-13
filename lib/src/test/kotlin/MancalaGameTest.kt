@@ -1,4 +1,5 @@
 import lib.EmptyPit
+import lib.InvalidPitIndex
 import lib.InvalidPlayerTurn
 import lib.MancalaGame
 import lib.MancalaPlayer
@@ -449,8 +450,20 @@ class MancalaGameTest {
         */
         val mancalaGame = MancalaGame()
 
-        mancalaGame.choosePitAutoPlayer(MancalaPlayerPit.Second)
-        mancalaGame.choosePitAutoPlayer(MancalaPlayerPit.First)
+        mancalaGame.choosePitIndexAutoPlayer(2)
+        mancalaGame.choosePitIndexAutoPlayer(1)
         assertTrue(intArrayOf(7, 0, 7, 7, 7, 7, 1, 0, 7, 7, 7, 7, 7, 1).contentEquals(mancalaGame.board.toIntArray()))
+    }
+
+    @Test
+    fun `test choosePitAutoPlayer with and invalid pitIndex not in 1-6 range`() {
+        val mancalaGame = MancalaGame()
+        assertThrows(InvalidPitIndex::class.java) {
+            mancalaGame.choosePitIndexAutoPlayer(0)
+        }
+
+        assertThrows(InvalidPitIndex::class.java) {
+            mancalaGame.choosePitIndexAutoPlayer(7)
+        }
     }
 }
