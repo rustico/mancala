@@ -364,7 +364,7 @@ class MancalaGameTest {
         /*
         Init
         [0]  6, 6, 6, 6, 6, 6,
-             6, 6, 6, 6, 6, 6 [9]
+             0, 0, 0, 0, 0, 0 [9]
         */
         val mancalaGame = MancalaGame()
         mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerTwo.index] = 0
