@@ -1,3 +1,4 @@
+import lib.EmptyPit
 import lib.InvalidPlayerTurn
 import lib.MancalaGame
 import lib.MancalaPlayer
@@ -8,26 +9,13 @@ import org.junit.jupiter.api.Test
 class MancalaGameTest {
     @Test
     fun `test init game default`() {
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-        )
-
-        assertEquals("Bob", mancalaGame.playerOne)
-        assertEquals("Alice", mancalaGame.playerTwo)
+        val mancalaGame = MancalaGame()
         assertEquals(MancalaPlayer.PlayerOne, mancalaGame.playerTurn)
     }
 
     @Test
     fun `test init game with PlayerTwo starting`() {
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-            playerTurn = MancalaPlayer.PlayerTwo
-        )
-
-        assertEquals("Bob", mancalaGame.playerOne)
-        assertEquals("Alice", mancalaGame.playerTwo)
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
         assertEquals(MancalaPlayer.PlayerTwo, mancalaGame.playerTurn)
     }
 
@@ -42,10 +30,7 @@ class MancalaGameTest {
         [1]  7, 7, 7, 7, 7, 0,
              6, 6, 6, 6, 6, 6  [0]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
 
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.First)
         assertTrue(intArrayOf(0, 7, 7, 7, 7, 7, 1, 6, 6, 6, 6, 6, 6, 0).contentEquals(mancalaGame.board.toIntArray()))
@@ -62,10 +47,7 @@ class MancalaGameTest {
         [1]  7, 7, 7, 7, 0, 6,
              7, 6, 6, 6, 6, 6 [0]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
 
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Second)
         assertTrue(intArrayOf(6, 0, 7, 7, 7, 7, 1, 7, 6, 6, 6, 6, 6, 0).contentEquals(mancalaGame.board.toIntArray()))
@@ -82,11 +64,7 @@ class MancalaGameTest {
         [0]  6, 6, 6, 6, 6, 6,
              0, 7, 7, 7, 7, 7 [1]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-            playerTurn = MancalaPlayer.PlayerTwo
-        )
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
 
         mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.First)
         assertTrue(intArrayOf(6, 6, 6, 6, 6, 6, 0, 0, 7, 7, 7, 7, 7, 1).contentEquals(mancalaGame.board.toIntArray()))
@@ -103,11 +81,7 @@ class MancalaGameTest {
         [0]  6, 7, 7, 7, 7, 7,
              6, 6, 6, 6, 6, 6 [1]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-            playerTurn = MancalaPlayer.PlayerTwo
-        )
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
 
         mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Sixth)
         assertTrue(intArrayOf(7, 7, 7, 7, 7, 6, 0, 6, 6, 6, 6, 6, 0, 1).contentEquals(mancalaGame.board.toIntArray()))
@@ -124,10 +98,7 @@ class MancalaGameTest {
         [1]  0, 6, 6, 6, 6, 7,
              7, 7, 7, 7, 7, 7 [0]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
 
         // Set 8 stones to PlayerOne sixth pit
         mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerOne.index] = 8
@@ -147,11 +118,7 @@ class MancalaGameTest {
         [0]  7, 7, 7, 7, 7, 7,
              7, 6, 6, 6, 6, 0 [1]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-            playerTurn = MancalaPlayer.PlayerTwo
-        )
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
 
         // Set 8 stones to PlayerOne sixth pit
         mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerTwo.index] = 8
@@ -171,10 +138,7 @@ class MancalaGameTest {
         [7]  6, 6, 0, 0, 6, 6,
              6, 6, 0, 6, 6, 6 [0]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
 
         // Set initial stones
         mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerOne.index] = 1
@@ -195,11 +159,7 @@ class MancalaGameTest {
         [7]  6, 6, 6, 0, 6, 6,
              6, 6, 0, 0, 6, 6 [7]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-            playerTurn = MancalaPlayer.PlayerTwo
-        )
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
 
         // Set initial stones
         mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerTwo.index] = 1
@@ -222,10 +182,7 @@ class MancalaGameTest {
         [1]  0, 6, 6, 6, 6, 6,
              6, 6, 6, 6, 6, 6 [1]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
 
         // Set initial stones
         mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerOne.index] = 1
@@ -248,11 +205,7 @@ class MancalaGameTest {
         [1]  6, 6, 6, 6, 6, 6,
              6, 6, 6, 6, 6, 0 [1]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-            playerTurn = MancalaPlayer.PlayerTwo
-        )
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
 
         // Set initial stones
         mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerTwo.index] = 1
@@ -264,10 +217,7 @@ class MancalaGameTest {
 
     @Test
     fun `test PlayerTwo cannot play because is not his turn`() {
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
         assertThrows(InvalidPlayerTurn::class.java) {
             mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Third)
         }
@@ -275,10 +225,7 @@ class MancalaGameTest {
 
     @Test
     fun `test PlayerOne play cannot two times because is not his turn`() {
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
 
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Third)
 
@@ -302,10 +249,7 @@ class MancalaGameTest {
         [2]  8, 8, 8, 8, 0, 0,
              7, 7, 6, 6, 6, 6  [0]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice"
-        )
+        val mancalaGame = MancalaGame()
 
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.First)
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Second)
@@ -327,14 +271,25 @@ class MancalaGameTest {
         [1]  6, 6, 6, 6, 7, 7,
              0, 0, 8, 8, 8, 8 [2]
         */
-        val mancalaGame = MancalaGame(
-            playerOne = "Bob",
-            playerTwo = "Alice",
-            playerTurn = MancalaPlayer.PlayerTwo
-        )
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
 
         mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.First)
         mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Second)
         assertTrue(intArrayOf(7, 7, 6, 6, 6, 6, 0, 0, 0, 8, 8, 8, 8, 2).contentEquals(mancalaGame.board.toIntArray()))
+    }
+
+    @Test
+    fun `test PlayerOne cannot choose empty pit`() {
+        /*
+        Init
+        [0]  6, 6, 6, 0, 6, 6,
+             6, 6, 6, 6, 6, 6 [0]
+        */
+        val mancalaGame = MancalaGame()
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerTwo.index] = 0
+
+        assertThrows(EmptyPit::class.java) {
+            mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Second)
+        }
     }
 }

@@ -1,8 +1,10 @@
 package lib
 
+/**
+ * Main game of Mancala.
+ *
+ */
 class MancalaGame (
-    val playerOne : String,
-    val playerTwo : String,
     var playerTurn: MancalaPlayer = MancalaPlayer.PlayerOne,
     val numberOfStones : Int = 6
 ) {
@@ -25,6 +27,14 @@ class MancalaGame (
     val board = MutableList(14) { if (it == playerOneBankIndex || it == playerTwoBankIndex) 0 else numberOfStones }
 
     fun choosePit(player: MancalaPlayer, pit: MancalaPlayerPit) {
+        /**
+         * Plays the pit chosen by the player
+         *
+         * If it is not player turn its throws an [InvalidPlayerTurn] exception
+         *
+         * @param player: Player that is playing this move
+         * @param pit: Pit or hole chosen by the player that will distribute its stones
+         */
         if (player != playerTurn) {
             throw InvalidPlayerTurn()
         }
@@ -37,6 +47,12 @@ class MancalaGame (
     }
 
     private fun distributeStones(player: MancalaPlayer, pit: Int): Boolean {
+        /**
+         * It distributes the stones in the [pit] chosen by the [player]
+         *
+         * @param player: Player that is distributing the stones
+         * @param pit: Pit or hole chosen by the player that will distribute its stones
+         */
         val pitStonesCount = board[pit]
 
         // Remove all stones from the current pit
