@@ -51,30 +51,27 @@ class MancalaGame (
          * Plays the pit chosen by the player
          *
          * If it is not player turn its throws an [InvalidPlayerTurn] exception
-         *
-         * @param player: Player that is playing this move
-         * @param pit: Pit or hole chosen by the player that will distribute its stones
          */
         if (player != playerTurn) {
             throw InvalidPlayerTurn()
         }
-        val anotherTurn = distributeStones(player, pit.index + player.index)
+        val lastPitIndex = distributeStones(player, pit.index + player.index)
 
         if (hasEnded()) {
             collectStonesTo(player)
-        } else if (!anotherTurn) {
-            playerTurn = if(player == MancalaPlayer.PlayerOne) MancalaPlayer.PlayerTwo else MancalaPlayer.PlayerOne
+        } else {
+            captureStones(lastPitIndex, player)
+
+            // If last pit was not in the [player] own bank we toggle the turn to the other player
+            if(!(pitIsAPlayerbank(lastPitIndex) && pitIsInPlayerBoard(lastPitIndex, player))) {
+                playerTurn = if(player == MancalaPlayer.PlayerOne) MancalaPlayer.PlayerTwo else MancalaPlayer.PlayerOne
+            }
         }
     }
 
-    private fun distributeStones(player: MancalaPlayer, pit: Int): Boolean {
+    private fun distributeStones(player: MancalaPlayer, pit: Int): Int {
         /**
          * It distributes the stones in the [pit] chosen by the [player]
-         *
-         * It also checks if a pit is empty, if the player captures opposite stones and if the player earns a new turn
-         *
-         * @param player: Player that is distributing the stones
-         * @param pit: Pit or hole chosen by the player that will distribute its stones
          */
         val pitStonesCount = board[pit]
         if (pitStonesCount == 0) {
@@ -84,52 +81,44 @@ class MancalaGame (
         // Remove all stones from the current pit
         board[pit] = 0
 
-        var anotherTurn = false
-
         // Move to the next pit
-        var pitIndex =  pit + 1
+        var pitIndex =  pit
 
-        for (stoneNumber in pitStonesCount downTo 1) {
-            // We don't store stones in the opponents bank
-            if(player == MancalaPlayer.PlayerOne && pitIndex == playerTwoBankIndex) {
-               pitIndex += 1
-            } else if(player == MancalaPlayer.PlayerTwo && pitIndex == playerOneBankIndex) {
-               pitIndex += 1
-            }
-
+        var stoneNumber = pitStonesCount
+        while(stoneNumber > 0) {
+            pitIndex += 1
             pitIndex %= board.size
 
-            val inOwnBoard =
-                (player == MancalaPlayer.PlayerOne && pitIndex <  MancalaPlayer.PlayerTwo.index) ||
-                (player == MancalaPlayer.PlayerTwo && pitIndex >= MancalaPlayer.PlayerTwo.index)
-
-            // Check if the last stone lands in a Player empty pit. If that is the case we capture that stone and all
-            // the stones in the opposing opponent side
-            val emptyPit = board[pitIndex] == 0
-            val lastStone = stoneNumber == 1
-            val pitIsAPlayerBank = pitIndex == playerOneBankIndex || pitIndex == playerTwoBankIndex
-            if (lastStone &&
-                emptyPit &&
-                inOwnBoard &&
-                !pitIsAPlayerBank) {
-                val oppositePitStoneIndex = (pitIndex + 7) % board.size
-                val opponentPitStones = board[oppositePitStoneIndex]
-                board[oppositePitStoneIndex] = 0
-
-                val playerBank = if(player == MancalaPlayer.PlayerOne) playerOneBankIndex else playerTwoBankIndex
-                board[playerBank] = opponentPitStones + stoneNumber
-
-            } else {
-                board[pitIndex] += 1
-
-                if(lastStone && pitIsAPlayerBank) {
-                    anotherTurn = true
-                }
+            // We don't store stones in the opponents bank
+            if ((player == MancalaPlayer.PlayerOne && pitIndex == playerTwoBankIndex) ||
+                (player == MancalaPlayer.PlayerTwo && pitIndex == playerOneBankIndex)) {
+                continue
             }
-            pitIndex += 1
+
+            board[pitIndex] += 1
+            stoneNumber -= 1
         }
 
-        return anotherTurn
+        return pitIndex
+    }
+
+    private fun captureStones(lastPitIndex: Int, player: MancalaPlayer) {
+        /**
+         * Check if the last stone lands in a Player empty pit. If that is the case we capture that stone and all
+         * the stones in the opposing opponent side
+         */
+        val wasEmptyPit = board[lastPitIndex] == 1
+        if (wasEmptyPit &&
+            pitIsInPlayerBoard(lastPitIndex, player) &&
+            !pitIsAPlayerbank(lastPitIndex)) {
+            val oppositePitStoneIndex = (lastPitIndex + 7) % board.size
+            val opponentPitStones = board[oppositePitStoneIndex]
+            board[oppositePitStoneIndex] = 0
+            board[lastPitIndex] = 0
+
+            val playerBank = if (player == MancalaPlayer.PlayerOne) playerOneBankIndex else playerTwoBankIndex
+            board[playerBank] += opponentPitStones + 1
+        }
     }
 
     fun hasEnded(): Boolean {
@@ -139,11 +128,24 @@ class MancalaGame (
         return playerOneBoard.sum() == 0 || playerTwoBoard.sum() == 0
     }
 
+    private fun pitIsAPlayerbank(pitIndex: Int): Boolean {
+        /**
+         * Returns if the pit index is one of the players banks
+         */
+        return pitIndex == playerOneBankIndex || pitIndex == playerTwoBankIndex
+    }
+
+    private fun pitIsInPlayerBoard(pitIndex: Int, player: MancalaPlayer): Boolean {
+        /**
+         * Returns if the last pit was in the [player] board
+         */
+        return (player == MancalaPlayer.PlayerOne && pitIndex <  MancalaPlayer.PlayerTwo.index) ||
+               (player == MancalaPlayer.PlayerTwo && pitIndex >= MancalaPlayer.PlayerTwo.index)
+    }
+
     private fun emptyBoard(player: MancalaPlayer) {
         /**
          * Empty the [player] board
-         *
-         * @param player: Player we are going to set its own pits to zero
          */
         val from: Int
         val to: Int
@@ -163,8 +165,6 @@ class MancalaGame (
     private fun collectStonesTo(player: MancalaPlayer) {
         /**
          * Collects all the stones in the pits of the opposite player to the [player] bank
-         *
-         * @param: Player we are going to collect all the opposite stones
          */
         if (player == MancalaPlayer.PlayerOne) {
             playerOneBank += playerTwoBoard.sum()
