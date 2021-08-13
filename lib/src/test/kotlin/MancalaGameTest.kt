@@ -377,4 +377,58 @@ class MancalaGameTest {
 
         assertTrue(mancalaGame.hasEnded())
     }
+
+    @Test
+    fun `test PlayerOne collects PlayerTwo stones when end games because PlayerOne doesn't have more stones`() {
+        /*
+        Init
+        [9]  1*, 0, 0, 0, 0, 0,
+             6,  6, 6, 6, 6, 6 [6]
+
+        Assert
+        [46]  0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0 [6]
+        */
+        val mancalaGame = MancalaGame()
+        mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fifth.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerOne.index] = 1
+        mancalaGame.playerOneBank = 9
+        mancalaGame.playerTwoBank = 6
+
+        mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Sixth)
+
+        assertTrue(mancalaGame.hasEnded())
+        assertTrue(intArrayOf(0, 0, 0, 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 6).contentEquals(mancalaGame.board.toIntArray()))
+    }
+
+    @Test
+    fun `test PlayerTwo collects PlayerOne stones when end games because PlayerTwo doesn't have more stones`() {
+        /*
+        Init
+        [9]  6, 6, 6, 6, 6, 6,
+             0, 0, 0, 0, 0, 1* [6]
+
+        Assert
+        [9]  0, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 0, 0 [46]
+        */
+        val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
+        mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fifth.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerTwo.index] = 1
+        mancalaGame.playerOneBank = 9
+        mancalaGame.playerTwoBank = 6
+
+        mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Sixth)
+
+        assertTrue(mancalaGame.hasEnded())
+        assertTrue(intArrayOf(0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 43).contentEquals(mancalaGame.board.toIntArray()))
+    }
 }

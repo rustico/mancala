@@ -60,8 +60,9 @@ class MancalaGame (
         }
         val anotherTurn = distributeStones(player, pit.index + player.index)
 
-        // Toggle player turn
-        if (!anotherTurn) {
+        if (hasEnded()) {
+            collectStonesTo(player)
+        } else if (!anotherTurn) {
             playerTurn = if(player == MancalaPlayer.PlayerOne) MancalaPlayer.PlayerTwo else MancalaPlayer.PlayerOne
         }
     }
@@ -137,4 +138,41 @@ class MancalaGame (
          */
         return playerOneBoard.sum() == 0 || playerTwoBoard.sum() == 0
     }
+
+    private fun emptyBoard(player: MancalaPlayer) {
+        /**
+         * Empty the [player] board
+         *
+         * @param player: Player we are going to set its own pits to zero
+         */
+        val from: Int
+        val to: Int
+        if (player == MancalaPlayer.PlayerOne) {
+            from = MancalaPlayer.PlayerOne.index
+            to = playerOneBankIndex - 1
+        } else {
+            from = MancalaPlayer.PlayerTwo.index
+            to = playerTwoBankIndex - 1
+        }
+
+        for (i in from..to){
+            board[i] = 0
+        }
+    }
+
+    private fun collectStonesTo(player: MancalaPlayer) {
+        /**
+         * Collects all the stones in the pits of the opposite player to the [player] bank
+         *
+         * @param: Player we are going to collect all the opposite stones
+         */
+        if (player == MancalaPlayer.PlayerOne) {
+            playerOneBank += playerTwoBoard.sum()
+            emptyBoard(MancalaPlayer.PlayerTwo)
+        } else {
+            playerTwoBank += playerOneBoard.sum()
+            emptyBoard(MancalaPlayer.PlayerOne)
+        }
+    }
 }
+
