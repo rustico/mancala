@@ -48,9 +48,9 @@ class MancalaGame (
 
     fun choosePit(player: MancalaPlayer, pit: MancalaPlayerPit) {
         /**
-         * Plays the pit chosen by the player
+         * Plays the [pit] chosen by the [player]
          *
-         * If it is not player turn its throws an [InvalidPlayerTurn] exception
+         * If it is not players turn its throws an [InvalidPlayerTurn] exception
          */
         if (player != playerTurn) {
             throw InvalidPlayerTurn()
@@ -67,6 +67,15 @@ class MancalaGame (
                 playerTurn = if(player == MancalaPlayer.PlayerOne) MancalaPlayer.PlayerTwo else MancalaPlayer.PlayerOne
             }
         }
+    }
+
+    fun choosePitAutoPlayer(pit: MancalaPlayerPit) {
+        /**
+         * Calls [choosePit] with the player in [playerTurn]
+         *
+         * It's a nice method to have to fill automatically the history of the game
+         */
+        choosePit(playerTurn, pit)
     }
 
     private fun distributeStones(player: MancalaPlayer, pit: Int): Int {
