@@ -41,7 +41,7 @@ class GameMoveControllerIntegrationTest(
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            apiKey = newGameResponse.apiKey,
+            playerApiKey = newGameResponse.playerOneApiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -64,7 +64,7 @@ class GameMoveControllerIntegrationTest(
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            apiKey = UUID.randomUUID(),
+            playerApiKey = UUID.randomUUID(),
             gameUuid = newGameResponse.uuid
         )
         assertThrows(ResourceAccessException::class.java) {
@@ -81,7 +81,7 @@ class GameMoveControllerIntegrationTest(
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            apiKey = UUID.randomUUID(),
+            playerApiKey = UUID.randomUUID(),
             gameUuid = UUID.randomUUID()
         )
 
@@ -104,7 +104,7 @@ class GameMoveControllerIntegrationTest(
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            apiKey = newGameResponse.apiKey,
+            playerApiKey = newGameResponse.playerOneApiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -138,7 +138,7 @@ class GameMoveControllerIntegrationTest(
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            apiKey = newGameResponse.apiKey,
+            playerApiKey = newGameResponse.playerOneApiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -164,7 +164,7 @@ class GameMoveControllerIntegrationTest(
         // Create a move
         val playerOneGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            apiKey = newGameResponse.apiKey,
+            playerApiKey = newGameResponse.playerOneApiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -177,7 +177,7 @@ class GameMoveControllerIntegrationTest(
         // Create another move
         val playerOneGameSecondMoveRequest = NewGameMoveRequest(
             position = 2,
-            apiKey = newGameResponse.apiKey,
+            playerApiKey = newGameResponse.playerOneApiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -192,5 +192,40 @@ class GameMoveControllerIntegrationTest(
         assertEquals(2, response.body!!.playerOneBank)
         assertTrue(intArrayOf(7, 7, 6, 6, 6, 6).contentEquals(response.body!!.playerTwoBoard.toIntArray()))
         assertEquals(0, response.body!!.playerTwoBank)
+    }
+
+    @Test
+    fun `test PlayerOne cannot play when is not his turn`() {
+        // Create one game
+        val newGameRequest = NewGameRequest(playerOneName = "Bob")
+        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+
+        // Create a move
+        val playerOneGameMoveRequest = NewGameMoveRequest(
+            position = 2,
+            playerApiKey = newGameResponse.playerOneApiKey,
+            gameUuid = newGameResponse.uuid
+        )
+
+        client.postForEntity(
+            "/gamesmoves",
+            playerOneGameMoveRequest,
+            MancalaGameResponse::class.java
+        )
+
+        // Create another move
+        val playerOneGameSecondMoveRequest = NewGameMoveRequest(
+            position = 3,
+            playerApiKey = newGameResponse.playerOneApiKey,
+            gameUuid = newGameResponse.uuid
+        )
+
+        assertThrows(ResourceAccessException::class.java) {
+            client.postForEntity(
+                "/gamesmoves",
+                playerOneGameSecondMoveRequest,
+                Any::class.java
+            )
+        }
     }
 }

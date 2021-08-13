@@ -1,6 +1,6 @@
-import lib.EmptyPit
-import lib.InvalidPitIndex
-import lib.InvalidPlayerTurn
+import lib.EmptyPitException
+import lib.InvalidPitIndexException
+import lib.InvalidPlayerTurnException
 import lib.MancalaGame
 import lib.MancalaPlayer
 import lib.MancalaPlayerPit
@@ -219,7 +219,7 @@ class MancalaGameTest {
     @Test
     fun `test PlayerTwo cannot play because is not his turn`() {
         val mancalaGame = MancalaGame()
-        assertThrows(InvalidPlayerTurn::class.java) {
+        assertThrows(InvalidPlayerTurnException::class.java) {
             mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Third)
         }
     }
@@ -230,7 +230,7 @@ class MancalaGameTest {
 
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Third)
 
-        assertThrows(InvalidPlayerTurn::class.java) {
+        assertThrows(InvalidPlayerTurnException::class.java) {
             mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Fourth)
         }
     }
@@ -289,7 +289,7 @@ class MancalaGameTest {
         val mancalaGame = MancalaGame()
         mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerOne.index] = 0
 
-        assertThrows(EmptyPit::class.java) {
+        assertThrows(EmptyPitException::class.java) {
             mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Second)
         }
     }
@@ -458,11 +458,11 @@ class MancalaGameTest {
     @Test
     fun `test choosePitAutoPlayer with and invalid pitIndex not in 1-6 range`() {
         val mancalaGame = MancalaGame()
-        assertThrows(InvalidPitIndex::class.java) {
+        assertThrows(InvalidPitIndexException::class.java) {
             mancalaGame.choosePitIndexAutoPlayer(0)
         }
 
-        assertThrows(InvalidPitIndex::class.java) {
+        assertThrows(InvalidPitIndexException::class.java) {
             mancalaGame.choosePitIndexAutoPlayer(7)
         }
     }

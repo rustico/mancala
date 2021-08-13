@@ -27,13 +27,13 @@ class GameController(private val gameService: GameService) {
         return gameService.findByUuid(uuid)
     }
 
-    @PutMapping("/{uuid}/join/{apiKey}")
+    @PutMapping("/{uuid}/join/{playerTwoApiKey}")
     fun joinGame(
         @PathVariable uuid: UUID,
-        @PathVariable apiKey: UUID,
+        @PathVariable playerTwoApiKey: UUID,
         @RequestBody joinGameRequest: JoinGameRequest
     ): NewGameResponse {
-        return gameService.joinGame(uuid, apiKey, joinGameRequest)
+        return gameService.joinGame(uuid, playerTwoApiKey, joinGameRequest)
     }
 
     @PostMapping()

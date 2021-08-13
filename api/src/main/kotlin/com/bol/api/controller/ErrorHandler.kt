@@ -3,6 +3,7 @@ package com.bol.api.controller
 import com.bol.api.service.GameAlreadyStartedException
 import com.bol.api.service.GameNotFoundException
 import com.bol.api.service.InvalidAPIKeyException
+import lib.InvalidPlayerTurnException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -22,4 +23,8 @@ class ErrorHandler {
     @ExceptionHandler(GameNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleGameNotFound(e: GameNotFoundException): String = e.message!!
+
+    @ExceptionHandler(InvalidPlayerTurnException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun handleInvalidPlayerTurn(e: InvalidPlayerTurnException): String = e.message!!
 }

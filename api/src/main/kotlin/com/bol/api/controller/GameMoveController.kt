@@ -4,6 +4,7 @@ import com.bol.api.dto.GameMoveResponse
 import com.bol.api.dto.MancalaGameResponse
 import com.bol.api.dto.NewGameMoveRequest
 import com.bol.api.service.GameMoveService
+import com.bol.api.service.GameService
 import com.bol.api.service.MancalaService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,7 +26,6 @@ class GameMoveController(
 
     @PostMapping
     fun postGameMove(@RequestBody newGameMoveRequest: NewGameMoveRequest): MancalaGameResponse {
-        // Get mancala game in the last state
         val mancalaGame = mancalaService.getMancalaGame(newGameMoveRequest)
 
         val mancalaGameResponse = mancalaService.playMove(mancalaGame, newGameMoveRequest)

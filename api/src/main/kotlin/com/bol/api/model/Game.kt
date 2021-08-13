@@ -22,12 +22,15 @@ class Game(
     val uuid: UUID = UUID.randomUUID(),
 
     @Column(nullable = false)
-    val apiKey: UUID = UUID.randomUUID(), // Key to access the game
-
-    @Column(nullable = false)
     val playerOneName: String,
 
+    @Column(nullable = false)
+    val playerOneApiKey: UUID = UUID.randomUUID(),
+
     var playerTwoName: String? = null,
+
+    @Column(nullable = false)
+    val playerTwoApiKey: UUID = UUID.randomUUID(),
 
     var winner: Int? = null,
 

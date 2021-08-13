@@ -5,7 +5,7 @@ import java.util.UUID
 
 class NewGameMoveRequest(
     val position: Int,
-    val apiKey: UUID,
+    val playerApiKey: UUID,
     val gameUuid: UUID
 )
 

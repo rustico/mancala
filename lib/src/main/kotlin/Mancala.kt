@@ -50,10 +50,10 @@ class MancalaGame (
         /**
          * Plays the [pit] chosen by the [player]
          *
-         * If it is not players turn its throws an [InvalidPlayerTurn] exception
+         * If it is not players turn its throws an [InvalidPlayerTurnException] exception
          */
         if (player != playerTurn) {
-            throw InvalidPlayerTurn()
+            throw InvalidPlayerTurnException()
         }
         val lastPitIndex = distributeStones(player, pit.index + player.index)
 
@@ -69,9 +69,9 @@ class MancalaGame (
         }
     }
 
-    fun choosePitIndexAutoPlayer(pitIndex: Int) {
+    fun choosePitIndex(pitIndex: Int, playerTurn: MancalaPlayer) {
         /**
-         * Calls [choosePit] with the player in [playerTurn]
+         * Calls [choosePit]
          *
          * It's a nice method to have to fill automatically the history of the game
          */
@@ -83,10 +83,20 @@ class MancalaGame (
             5 -> MancalaPlayerPit.Fifth
             6 -> MancalaPlayerPit.Sixth
             else -> {
-                throw InvalidPitIndex()
+                throw InvalidPitIndexException()
             }
         }
         choosePit(playerTurn, pit)
+    }
+
+    fun choosePitIndexAutoPlayer(pitIndex: Int) {
+        /**
+         * Calls [choosePit] with the player in [playerTurn]
+         *
+         * It's a nice method to have to fill automatically the history of the game
+         */
+
+        choosePitIndex(pitIndex, playerTurn)
     }
 
     private fun distributeStones(player: MancalaPlayer, pit: Int): Int {
@@ -95,7 +105,7 @@ class MancalaGame (
          */
         val pitStonesCount = board[pit]
         if (pitStonesCount == 0) {
-            throw EmptyPit()
+            throw EmptyPitException()
         }
 
         // Remove all stones from the current pit

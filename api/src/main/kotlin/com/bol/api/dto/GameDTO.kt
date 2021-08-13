@@ -21,9 +21,10 @@ class GameResponse(
 
 class NewGameResponse(
     val uuid: UUID,
-    val apiKey: UUID,
     val playerOneName: String,
+    val playerOneApiKey: UUID,
     val playerTwoName: String?,
+    val playerTwoApiKey: UUID,
     val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?
 )

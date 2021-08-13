@@ -43,7 +43,8 @@ class GameControllerIntegrationTest(
         val playerOne = "Bob"
         val newGameRequest = NewGameRequest(playerOneName = playerOne)
         val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
-        assertNotNull(newGameResponse.apiKey)
+        assertNotNull(newGameResponse.playerOneApiKey)
+        assertNotNull(newGameResponse.playerTwoApiKey)
         assertNotNull(newGameResponse.uuid)
         assertNotNull(newGameResponse.createdAt)
         assertNotNull(newGameResponse.updatedAt)
@@ -100,15 +101,15 @@ class GameControllerIntegrationTest(
         // Join game
         val playerTwo = "Bob"
         val joinGameRequest = JoinGameRequest(playerTwoName = playerTwo)
-        client.put("/games/${newGameResponse.uuid}/join/${newGameResponse.apiKey}", joinGameRequest)
+        client.put("/games/${newGameResponse.uuid}/join/${newGameResponse.playerTwoApiKey}", joinGameRequest)
 
         // Retrieve game
         val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
         assertNotNull(gameResponse.uuid)
         assertNotNull(gameResponse.createdAt)
         assertNotNull(gameResponse.updatedAt)
-        assertEquals(gameResponse.playerOneName, playerOne)
-        assertEquals(gameResponse.playerTwoName, playerTwo)
+        assertEquals(playerOne, gameResponse.playerOneName)
+        assertEquals(playerTwo, gameResponse.playerTwoName)
     }
 
     @Test
@@ -120,14 +121,14 @@ class GameControllerIntegrationTest(
         // Join game
         val joinGameRequest = JoinGameRequest(playerTwoName = "Bob")
         client.put(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.apiKey}",
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.playerOneApiKey}",
             joinGameRequest
         )
 
         // Join Again
         assertThrows(ResourceAccessException::class.java) {
             client.exchange(
-                "/games/${newGameResponse.uuid}/join/${newGameResponse.apiKey}",
+                "/games/${newGameResponse.uuid}/join/${newGameResponse.playerOneApiKey}",
                 HttpMethod.PUT,
                 HttpEntity<JoinGameRequest>(joinGameRequest),
                 String::class.java
@@ -160,9 +161,9 @@ class GameControllerIntegrationTest(
         val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
 
         // Join game
-        val joinGameRequest = JoinGameRequest(playerTwoName = "Not Bob")
+        val joinGameRequest = JoinGameRequest(playerTwoName = "Bob")
         val response = client.exchange(
-            "/games/${UUID.randomUUID()}/join/${newGameResponse.apiKey}",
+            "/games/${UUID.randomUUID()}/join/${newGameResponse.playerTwoApiKey}",
             HttpMethod.PUT,
             HttpEntity<JoinGameRequest>(joinGameRequest),
             String::class.java

@@ -16,18 +16,20 @@ class GameMoveService(
     private val gameRepository: GameRepository
 ) {
     fun findAllByGameUuid(gameUuid: UUID): List<GameMoveResponse> {
+        /**
+         * Get all moves by [gameUuid] order by id
+         */
         return gameMoveRepository
             .findAllByGameUuidOrderById(gameUuid)
             .mapIndexed() { index, gameMove -> gameMove.toGameMoveResponse(index) }
     }
 
     fun create(newGameMoveRequest: NewGameMoveRequest) {
+        /**
+         * Creates a new move in the Game
+         */
         try {
             val game = gameRepository.findByUuid(newGameMoveRequest.gameUuid)
-
-            if (game.apiKey != newGameMoveRequest.apiKey) {
-                throw InvalidAPIKeyException()
-            }
 
             val gameMove = GameMove(
                 game = game,

@@ -14,9 +14,10 @@ fun Game.toGameResponse() = GameResponse(
 
 fun Game.toNewGameResponse() = NewGameResponse(
     uuid = uuid,
-    apiKey = apiKey,
     playerOneName = playerOneName,
+    playerOneApiKey = playerOneApiKey,
     playerTwoName = playerTwoName,
+    playerTwoApiKey = playerTwoApiKey,
     createdAt = createdAt,
     updatedAt = updatedAt
 )
