@@ -8,12 +8,18 @@ import lib.MancalaGame
 
 @Service
 class MancalaService(private val gameMoveRepository: GameMoveRepository) {
-    fun getBoard(newGameMoveRequest: NewGameMoveRequest) : MancalaGameResponse{
+    fun getMancalaGame(newGameMoveRequest: NewGameMoveRequest) : MancalaGame {
         val gameMoves = gameMoveRepository.findAllByGameUuidOrderById(newGameMoveRequest.gameUuid)
         val mancalaGame = MancalaGame()
         for (gameMove in gameMoves) {
             mancalaGame.choosePitIndexAutoPlayer(gameMove.position)
         }
+
+        return mancalaGame
+    }
+
+    fun playMove(mancalaGame: MancalaGame, newGameMoveRequest: NewGameMoveRequest): MancalaGameResponse {
+        mancalaGame.choosePitIndexAutoPlayer(newGameMoveRequest.position)
 
         return MancalaGameResponse(
             playerOneBoard = mancalaGame.playerOneBoard,

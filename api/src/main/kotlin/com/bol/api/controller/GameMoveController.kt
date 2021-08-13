@@ -25,10 +25,13 @@ class GameMoveController(
 
     @PostMapping
     fun postGameMove(@RequestBody newGameMoveRequest: NewGameMoveRequest): MancalaGameResponse {
+        // Get mancala game in the last state
+        val mancalaGame = mancalaService.getMancalaGame(newGameMoveRequest)
+
+        val mancalaGameResponse = mancalaService.playMove(mancalaGame, newGameMoveRequest)
+
         gameMoveService.create(newGameMoveRequest)
 
-        // If everything went aright without exceptions
-        // We return the new board
-        return mancalaService.getBoard(newGameMoveRequest)
+        return mancalaGameResponse
     }
 }

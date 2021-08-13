@@ -60,10 +60,10 @@ class MancalaGame (
         if (hasEnded()) {
             collectStonesTo(player)
         } else {
-            captureStones(lastPitIndex, player)
+            checkAndCaptureStones(lastPitIndex, player)
 
-            // If last pit was not in the [player] own bank we toggle the turn to the other player
-            if(!(pitIsAPlayerbank(lastPitIndex) && pitIsInPlayerBoard(lastPitIndex, player))) {
+            // If last pit was not in the [player] own bank we change the turn to the other player
+            if(!(pitIsAPlayerBank(lastPitIndex) && pitIsInPlayerBoard(lastPitIndex, player))) {
                 playerTurn = if(player == MancalaPlayer.PlayerOne) MancalaPlayer.PlayerTwo else MancalaPlayer.PlayerOne
             }
         }
@@ -122,7 +122,7 @@ class MancalaGame (
         return pitIndex
     }
 
-    private fun captureStones(lastPitIndex: Int, player: MancalaPlayer) {
+    private fun checkAndCaptureStones(lastPitIndex: Int, player: MancalaPlayer) {
         /**
          * Check if the last stone lands in a Player empty pit. If that is the case we capture that stone and all
          * the stones in the opposing opponent side
@@ -130,7 +130,7 @@ class MancalaGame (
         val wasEmptyPit = board[lastPitIndex] == 1
         if (wasEmptyPit &&
             pitIsInPlayerBoard(lastPitIndex, player) &&
-            !pitIsAPlayerbank(lastPitIndex)) {
+            !pitIsAPlayerBank(lastPitIndex)) {
             val oppositePitStoneIndex = (lastPitIndex + 7) % board.size
             val opponentPitStones = board[oppositePitStoneIndex]
             board[oppositePitStoneIndex] = 0
@@ -148,7 +148,7 @@ class MancalaGame (
         return playerOneBoard.sum() == 0 || playerTwoBoard.sum() == 0
     }
 
-    private fun pitIsAPlayerbank(pitIndex: Int): Boolean {
+    private fun pitIsAPlayerBank(pitIndex: Int): Boolean {
         /**
          * Returns if the pit index is one of the players banks
          */
@@ -165,7 +165,7 @@ class MancalaGame (
 
     private fun emptyBoard(player: MancalaPlayer) {
         /**
-         * Empty the [player] board
+         * Empties the [player] board
          */
         val from: Int
         val to: Int
