@@ -1,6 +1,7 @@
 package com.bol.api.controller
 
 import com.bol.api.dto.GameMoveResponse
+import com.bol.api.dto.MancalaGameResponse
 import org.junit.jupiter.api.Assertions.*
 import com.bol.api.dto.NewGameMoveRequest
 import com.bol.api.dto.NewGameRequest
@@ -126,5 +127,70 @@ class GameMoveControllerIntegrationTest(
         assertNotNull(gameMoveResponse.position)
         assertNotNull(gameMoveResponse.createdAt)
         assertNotNull(gameMoveResponse.turn)
+    }
+
+    @Test
+    fun `test when can create a new game move we received the new board state`() {
+        // Create one game
+        val newGameRequest = NewGameRequest(playerOneName = "Bob")
+        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+
+        // Create a move
+        val newGameMoveRequest = NewGameMoveRequest(
+            position = 1,
+            apiKey = newGameResponse.apiKey,
+            gameUuid = newGameResponse.uuid
+        )
+
+        val response = client.postForEntity(
+            "/gamesmoves",
+            newGameMoveRequest,
+            MancalaGameResponse::class.java
+        )
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertTrue(intArrayOf(0, 7, 7, 7, 7, 7).contentEquals(response.body!!.playerOneBoard.toIntArray()))
+        assertEquals(1, response.body!!.playerOneBank)
+        assertTrue(intArrayOf(6, 6, 6, 6, 6, 6).contentEquals(response.body!!.playerTwoBoard.toIntArray()))
+        assertEquals(0, response.body!!.playerTwoBank)
+    }
+
+    @Test
+    fun `test when creating multiples game moves the board maintains its state`() {
+        // Create one game
+        val newGameRequest = NewGameRequest(playerOneName = "Bob")
+        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+
+        // Create a move
+        val playerOneGameMoveRequest = NewGameMoveRequest(
+            position = 1,
+            apiKey = newGameResponse.apiKey,
+            gameUuid = newGameResponse.uuid
+        )
+
+        client.postForEntity(
+            "/gamesmoves",
+            playerOneGameMoveRequest,
+            MancalaGameResponse::class.java
+        )
+
+        // Create another move
+        val playerOneGameSecondMoveRequest = NewGameMoveRequest(
+            position = 2,
+            apiKey = newGameResponse.apiKey,
+            gameUuid = newGameResponse.uuid
+        )
+
+        val response = client.postForEntity(
+            "/gamesmoves",
+            playerOneGameSecondMoveRequest,
+            MancalaGameResponse::class.java
+        )
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertTrue(intArrayOf(0, 0, 8, 8, 8, 8).contentEquals(response.body!!.playerOneBoard.toIntArray()))
+        assertEquals(2, response.body!!.playerOneBank)
+        assertTrue(intArrayOf(7, 7, 6, 6, 6, 6).contentEquals(response.body!!.playerTwoBoard.toIntArray()))
+        assertEquals(0, response.body!!.playerTwoBank)
     }
 }
