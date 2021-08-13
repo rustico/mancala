@@ -70,6 +70,9 @@ class MancalaGame (
          * @param pit: Pit or hole chosen by the player that will distribute its stones
          */
         val pitStonesCount = board[pit]
+        if (pitStonesCount == 0) {
+            throw EmptyPit()
+        }
 
         // Remove all stones from the current pit
         board[pit] = 0

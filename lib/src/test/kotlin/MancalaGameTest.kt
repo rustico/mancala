@@ -282,11 +282,11 @@ class MancalaGameTest {
     fun `test PlayerOne cannot choose empty pit`() {
         /*
         Init
-        [0]  6, 6, 6, 0, 6, 6,
+        [0]  6, 6, 6, 6, 0, 6,
              6, 6, 6, 6, 6, 6 [0]
         */
         val mancalaGame = MancalaGame()
-        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerTwo.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerOne.index] = 0
 
         assertThrows(EmptyPit::class.java) {
             mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Second)
