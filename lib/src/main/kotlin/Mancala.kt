@@ -58,7 +58,7 @@ class MancalaGame (
         val lastPitIndex = distributeStones(player, pit.index + player.index)
 
         if (hasEnded()) {
-            collectStonesTo(player)
+            collectStones()
         } else {
             checkAndCaptureStones(lastPitIndex, player)
 
@@ -192,17 +192,15 @@ class MancalaGame (
         }
     }
 
-    private fun collectStonesTo(player: MancalaPlayer) {
+    private fun collectStones() {
         /**
-         * Collects all the stones in the pits of the opposite player to the [player] bank
+         * Collects all the stones in the pits of and put them in the players bank
          */
-        if (player == MancalaPlayer.PlayerOne) {
-            playerOneBank += playerTwoBoard.sum()
-            emptyBoard(MancalaPlayer.PlayerTwo)
-        } else {
-            playerTwoBank += playerOneBoard.sum()
-            emptyBoard(MancalaPlayer.PlayerOne)
-        }
+        playerOneBank += playerOneBoard.sum()
+        emptyBoard(MancalaPlayer.PlayerOne)
+
+        playerTwoBank += playerTwoBoard.sum()
+        emptyBoard(MancalaPlayer.PlayerTwo)
     }
 }
 

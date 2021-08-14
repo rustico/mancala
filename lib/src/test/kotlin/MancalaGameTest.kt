@@ -403,7 +403,7 @@ class MancalaGameTest {
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Sixth)
 
         assertTrue(mancalaGame.hasEnded())
-        assertTrue(intArrayOf(0, 0, 0, 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 6).contentEquals(mancalaGame.board.toIntArray()))
+        assertTrue(intArrayOf(0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 42).contentEquals(mancalaGame.board.toIntArray()))
     }
 
     @Test
@@ -414,8 +414,8 @@ class MancalaGameTest {
              0, 0, 0, 0, 0, 1* [6]
 
         Assert
-        [9]  0, 0, 0, 0, 0, 0,
-             0, 0, 0, 0, 0, 0 [46]
+        [45]  0, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 0, 0 [7]
         */
         val mancalaGame = MancalaGame(playerTurn = MancalaPlayer.PlayerTwo)
         mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerTwo.index] = 0
@@ -430,7 +430,7 @@ class MancalaGameTest {
         mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Sixth)
 
         assertTrue(mancalaGame.hasEnded())
-        assertTrue(intArrayOf(0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 43).contentEquals(mancalaGame.board.toIntArray()))
+        assertTrue(intArrayOf(0, 0, 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 7).contentEquals(mancalaGame.board.toIntArray()))
     }
 
     @Test
