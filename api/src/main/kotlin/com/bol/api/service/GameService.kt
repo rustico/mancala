@@ -1,10 +1,10 @@
 package com.bol.api.service
 
 import com.bol.api.dto.GameResponse
-import com.bol.api.dto.JoinGameRequest
-import com.bol.api.dto.NewGameRequest
+import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.extension.toGameResponse
+import com.bol.api.extension.toJoinGameResponse
 import com.bol.api.extension.toNewGameResponse
 import com.bol.api.model.Game
 import com.bol.api.repository.GameRepository
@@ -36,36 +36,33 @@ class GameService(private val gameRepository: GameRepository) {
         }
     }
 
-    fun create(newGameRequest: NewGameRequest): NewGameResponse {
+    fun create(): NewGameResponse {
         /**
          * Game is created by PlayerOne.
          *
          * Returns a [NewGameResponse] with the API keys to play the game and invite another player
          */
-        val game = Game(
-            playerOneName = newGameRequest.playerOneName,
-        )
-        return gameRepository.save(game).toNewGameResponse()
+        return gameRepository.save(Game()).toNewGameResponse()
     }
 
-    fun joinGame(gameUuid: UUID, playerApiKey: UUID, joinGameRequest: JoinGameRequest): NewGameResponse {
+    fun joinGame(gameUuid: UUID, invitationApiKey: UUID): JoinGameResponse {
         /**
-         * PlayerTwo joins the game using his API key [playerApiKey] sent in the invitation link
+         * PlayerTwo joins the game using his API key [invitationApiKey] sent in the invitation link
          */
         try {
             val game = gameRepository.findByUuid(gameUuid)
 
-            if (game.playerTwoName != null) {
+            if (game.invitationApiKey == null) {
                 throw GameAlreadyStartedException()
             }
-            if (game.playerTwoApiKey != playerApiKey) {
+            if (game.invitationApiKey != invitationApiKey) {
                 throw InvalidAPIKeyException()
             }
 
-            game.playerTwoName = joinGameRequest.playerTwoName
+            game.invitationApiKey = null
             gameRepository.save(game)
 
-            return game.toNewGameResponse()
+            return game.toJoinGameResponse()
 
         } catch (e: EmptyResultDataAccessException) {
             throw GameNotFoundException()

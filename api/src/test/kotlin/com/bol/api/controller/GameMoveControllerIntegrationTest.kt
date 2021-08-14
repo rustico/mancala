@@ -4,7 +4,6 @@ import com.bol.api.dto.GameMoveResponse
 import com.bol.api.dto.MancalaGameResponse
 import org.junit.jupiter.api.Assertions.*
 import com.bol.api.dto.NewGameMoveRequest
-import com.bol.api.dto.NewGameRequest
 import com.bol.api.dto.NewGameResponse
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -34,14 +33,12 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test we can create a new game move`() {
         // Create one game
-        val playerOne = "Bob"
-        val newGameRequest = NewGameRequest(playerOneName = playerOne)
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            playerApiKey = newGameResponse.playerOneApiKey,
+            playerApiKey = newGameResponse.apiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -57,9 +54,7 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test we cannot create a new game move without a valid api key`() {
         // Create one game
-        val playerOne = "Bob"
-        val newGameRequest = NewGameRequest(playerOneName = playerOne)
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
@@ -97,14 +92,12 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test we can get all game moves`() {
         // Create one game
-        val playerOne = "Bob"
-        val newGameRequest = NewGameRequest(playerOneName = playerOne)
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            playerApiKey = newGameResponse.playerOneApiKey,
+            playerApiKey = newGameResponse.apiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -132,13 +125,12 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test when can create a new game move we received the new board state`() {
         // Create one game
-        val newGameRequest = NewGameRequest(playerOneName = "Bob")
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            playerApiKey = newGameResponse.playerOneApiKey,
+            playerApiKey = newGameResponse.apiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -158,13 +150,12 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test when creating multiples game moves the board maintains its state`() {
         // Create one game
-        val newGameRequest = NewGameRequest(playerOneName = "Bob")
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Create a move
         val playerOneGameMoveRequest = NewGameMoveRequest(
             position = 1,
-            playerApiKey = newGameResponse.playerOneApiKey,
+            playerApiKey = newGameResponse.apiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -177,7 +168,7 @@ class GameMoveControllerIntegrationTest(
         // Create another move
         val playerOneGameSecondMoveRequest = NewGameMoveRequest(
             position = 2,
-            playerApiKey = newGameResponse.playerOneApiKey,
+            playerApiKey = newGameResponse.apiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -197,13 +188,12 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test PlayerOne cannot play when is not his turn`() {
         // Create one game
-        val newGameRequest = NewGameRequest(playerOneName = "Bob")
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Create a move
         val playerOneGameMoveRequest = NewGameMoveRequest(
             position = 2,
-            playerApiKey = newGameResponse.playerOneApiKey,
+            playerApiKey = newGameResponse.apiKey,
             gameUuid = newGameResponse.uuid
         )
 
@@ -216,7 +206,7 @@ class GameMoveControllerIntegrationTest(
         // Create another move
         val playerOneGameSecondMoveRequest = NewGameMoveRequest(
             position = 3,
-            playerApiKey = newGameResponse.playerOneApiKey,
+            playerApiKey = newGameResponse.apiKey,
             gameUuid = newGameResponse.uuid
         )
 

@@ -22,16 +22,15 @@ class Game(
     val uuid: UUID = UUID.randomUUID(),
 
     @Column(nullable = false)
-    val playerOneName: String,
-
-    @Column(nullable = false)
     val playerOneApiKey: UUID = UUID.randomUUID(),
 
-    var playerTwoName: String? = null,
+    @Column(nullable = true)
+    var invitationApiKey: UUID? = UUID.randomUUID(),
 
     @Column(nullable = false)
     val playerTwoApiKey: UUID = UUID.randomUUID(),
 
+    @Column(nullable = true)
     var winner: Int? = null,
 
     @CreationTimestamp

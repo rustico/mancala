@@ -1,8 +1,7 @@
 package com.bol.api.controller
 
 import com.bol.api.dto.GameResponse
-import com.bol.api.dto.JoinGameRequest
-import com.bol.api.dto.NewGameRequest
+import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -10,8 +9,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.web.client.ResourceAccessException
@@ -40,16 +37,12 @@ class GameControllerIntegrationTest(
         assertEquals(0, emptyEntity.body?.size)
 
         // Create one game
-        val playerOne = "Bob"
-        val newGameRequest = NewGameRequest(playerOneName = playerOne)
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
-        assertNotNull(newGameResponse.playerOneApiKey)
-        assertNotNull(newGameResponse.playerTwoApiKey)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        assertNotNull(newGameResponse.apiKey)
+        assertNotNull(newGameResponse.invitationApiKey)
         assertNotNull(newGameResponse.uuid)
         assertNotNull(newGameResponse.createdAt)
         assertNotNull(newGameResponse.updatedAt)
-        assertEquals(newGameResponse.playerOneName, playerOne)
-        assertNull(newGameResponse.playerTwoName)
 
         // Retrieve game
         val response = client.getForEntity("/games", Array<GameResponse>::class.java)
@@ -59,32 +52,24 @@ class GameControllerIntegrationTest(
         assertNotNull(gameResponse.uuid)
         assertNotNull(gameResponse.createdAt)
         assertNotNull(gameResponse.updatedAt)
-        assertEquals(gameResponse.playerOneName, playerOne)
-        assertNull(gameResponse.playerTwoName)
     }
 
     @Test
     fun `test if we can get a game by its uuid`() {
         // Create one game
-        val playerOne = "Alice"
-        val newGameRequest = NewGameRequest(playerOneName = playerOne)
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Retrieve game
         val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
         assertNotNull(gameResponse.uuid)
         assertNotNull(gameResponse.createdAt)
         assertNotNull(gameResponse.updatedAt)
-        assertEquals(gameResponse.playerOneName, playerOne)
-        assertNull(gameResponse.playerTwoName)
     }
 
     @Test
     fun `test we can't get a game by using an unknow uuid`() {
         // Create one game
-        val playerOne = "Alice"
-        val newGameRequest = NewGameRequest(playerOneName = playerOne)
-        client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Retrieve game
         val response = client.getForEntity("/games/${UUID.randomUUID()}", String::class.java)
@@ -94,80 +79,59 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we can join a game`() {
         // Create one game
-        val playerOne = "Alice"
-        val newGameRequest = NewGameRequest(playerOneName = playerOne)
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Join game
-        val playerTwo = "Bob"
-        val joinGameRequest = JoinGameRequest(playerTwoName = playerTwo)
-        client.put("/games/${newGameResponse.uuid}/join/${newGameResponse.playerTwoApiKey}", joinGameRequest)
+        val joinGameResponse = client.getForObject(
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+            JoinGameResponse::class.java)
 
-        // Retrieve game
-        val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
-        assertNotNull(gameResponse.uuid)
-        assertNotNull(gameResponse.createdAt)
-        assertNotNull(gameResponse.updatedAt)
-        assertEquals(playerOne, gameResponse.playerOneName)
-        assertEquals(playerTwo, gameResponse.playerTwoName)
+        assertNotNull(joinGameResponse.uuid)
+        assertNotNull(newGameResponse.apiKey)
+        assertNotNull(joinGameResponse.createdAt)
+        assertNotNull(joinGameResponse.updatedAt)
     }
 
     @Test
-    fun `test we cannot join a game with two players already playing`() {
+    fun `test we cannot join a game that has already started`() {
         // Create one game
-        val newGameRequest = NewGameRequest(playerOneName = "Alice")
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Join game
-        val joinGameRequest = JoinGameRequest(playerTwoName = "Bob")
-        client.put(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.playerOneApiKey}",
-            joinGameRequest
-        )
+        client.getForObject(
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+            JoinGameResponse::class.java)
 
         // Join Again
-        assertThrows(ResourceAccessException::class.java) {
-            client.exchange(
-                "/games/${newGameResponse.uuid}/join/${newGameResponse.playerOneApiKey}",
-                HttpMethod.PUT,
-                HttpEntity<JoinGameRequest>(joinGameRequest),
-                String::class.java
-            )
-        }
+        val response = client.getForEntity(
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+            String::class.java)
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
     @Test
     fun `test we cannot join a game with an invalid api key`() {
         // Create one game
-        val newGameRequest = NewGameRequest(playerOneName = "Alice")
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Join game
-        val joinGameRequest = JoinGameRequest(playerTwoName = "Not Bob")
-        assertThrows(ResourceAccessException::class.java) {
-            client.exchange(
-                "/games/${newGameResponse.uuid}/join/${UUID.randomUUID()}",
-                HttpMethod.PUT,
-                HttpEntity<JoinGameRequest>(joinGameRequest),
-                String::class.java
-            )
-        }
+        val response = client.getForEntity(
+            "/games/${newGameResponse.uuid}/join/${UUID.randomUUID()}",
+            String::class.java)
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
     @Test
     fun `test we cannot join a game with an unknown game uuid`() {
         // Create one game
-        val newGameRequest = NewGameRequest(playerOneName = "Alice")
-        val newGameResponse = client.postForObject("/games", newGameRequest, NewGameResponse::class.java)
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
         // Join game
-        val joinGameRequest = JoinGameRequest(playerTwoName = "Bob")
-        val response = client.exchange(
-            "/games/${UUID.randomUUID()}/join/${newGameResponse.playerTwoApiKey}",
-            HttpMethod.PUT,
-            HttpEntity<JoinGameRequest>(joinGameRequest),
-            String::class.java
-        )
+        val response = client.getForEntity(
+            "/games/${UUID.randomUUID()}/join/${newGameResponse.invitationApiKey}",
+            String::class.java)
 
         assertEquals(HttpStatus.NOT_FOUND, response.statusCode)
     }
