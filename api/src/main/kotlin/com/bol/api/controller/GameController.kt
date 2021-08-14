@@ -5,6 +5,7 @@ import com.bol.api.dto.JoinGameRequest
 import com.bol.api.dto.NewGameRequest
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.service.GameService
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
+@CrossOrigin(origins = ["*"])
 @RequestMapping("/games")
 class GameController(private val gameService: GameService) {
     @GetMapping
