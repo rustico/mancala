@@ -146,7 +146,7 @@ class MancalaGameTest {
         mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerOne.index] = 0
 
         mancalaGame.choosePit(MancalaPlayer.PlayerOne, MancalaPlayerPit.Third)
-        assertTrue(intArrayOf(6, 6, 0, 0, 6, 6, 7, 6, 6, 6, 0, 6, 6, 0).contentEquals(mancalaGame.board.toIntArray()))
+        assertTrue(intArrayOf(6, 6, 0, 0, 6, 6, 7, 6, 6, 0, 6, 6, 6, 0).contentEquals(mancalaGame.board.toIntArray()))
     }
 
     @Test
@@ -167,7 +167,7 @@ class MancalaGameTest {
         mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerTwo.index] = 0
 
         mancalaGame.choosePit(MancalaPlayer.PlayerTwo, MancalaPlayerPit.Third)
-        assertTrue(intArrayOf(6, 6, 6, 0, 6, 6, 0, 6, 6, 0, 0, 6, 6, 7).contentEquals(mancalaGame.board.toIntArray()))
+        assertTrue(intArrayOf(6, 6, 0, 6, 6, 6, 0, 6, 6, 0, 0, 6, 6, 7).contentEquals(mancalaGame.board.toIntArray()))
     }
 
     @Test

@@ -141,7 +141,7 @@ class MancalaGame (
         if (wasEmptyPit &&
             pitIsInPlayerBoard(lastPitIndex, player) &&
             !pitIsAPlayerBank(lastPitIndex)) {
-            val oppositePitStoneIndex = (lastPitIndex + 7) % board.size
+            val oppositePitStoneIndex = board.size - lastPitIndex - 2
             val opponentPitStones = board[oppositePitStoneIndex]
             board[oppositePitStoneIndex] = 0
             board[lastPitIndex] = 0
