@@ -10,12 +10,13 @@
     <div v-if='isPlayer && !invitationLink'>
       <div class="choosePitText">Choose a pit to move stones</div>
       <div class="choosePit"> 
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(1)">1</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(2)">2</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(3)">3</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(4)">4</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(5)">5</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(6)">6</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(1)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">1</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(2)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">2</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(3)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">3</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(4)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">4</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(5)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">5</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(6)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">6</button>
+
       </div>
     </div>
 
@@ -148,6 +149,14 @@ export default {
     margin: 5px;
     background-color: rgb(121 56 56);
     border: none;
+}
+
+.choosePitButton:hover {
+  cursor: pointer;
+}
+
+.buttonDisabled:hover {
+  cursor: not-allowed;
 }
 
 .choosePitText {
