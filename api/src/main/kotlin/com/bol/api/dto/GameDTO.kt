@@ -10,8 +10,11 @@ class GameResponse(
     val updatedAt: LocalDateTime?,
     val playerOneBoard: MutableList<Int>,
     val playerOneBank: Int,
+    val playerOneId: String,
     val playerTwoBoard: MutableList<Int>,
-    val playerTwoBank: Int
+    val playerTwoBank: Int,
+    val playerTwoId: String,
+    val playerTurn: String
 )
 
 class SimpleGameResponse(

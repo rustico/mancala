@@ -5,7 +5,9 @@ import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.model.Game
+import com.bol.api.utils.shortUuid
 import lib.MancalaGame
+import lib.MancalaPlayer
 
 fun Game.toGameResponse(mancalaGame: MancalaGame) = GameResponse(
     uuid = uuid,
@@ -13,8 +15,11 @@ fun Game.toGameResponse(mancalaGame: MancalaGame) = GameResponse(
     updatedAt = updatedAt,
     playerOneBoard = mancalaGame.playerOneBoard,
     playerOneBank = mancalaGame.playerOneBank,
+    playerOneId = shortUuid(playerOneApiKey),
     playerTwoBoard = mancalaGame.playerTwoBoard,
-    playerTwoBank = mancalaGame.playerTwoBank
+    playerTwoBank = mancalaGame.playerTwoBank,
+    playerTwoId = shortUuid(playerTwoApiKey),
+    playerTurn = if (mancalaGame.playerTurn == MancalaPlayer.PlayerOne) shortUuid(playerOneApiKey) else shortUuid(playerTwoApiKey)
 )
 
 fun Game.toSimpleGameResponse() = SimpleGameResponse(

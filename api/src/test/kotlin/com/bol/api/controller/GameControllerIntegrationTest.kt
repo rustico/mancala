@@ -4,6 +4,7 @@ import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.dto.SimpleGameResponse
+import com.bol.api.utils.shortUuid
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -138,7 +139,7 @@ class GameControllerIntegrationTest(
     }
 
     @Test
-    fun `test we can get a game board by its uuid`() {
+    fun `test we get a game board by its uuid`() {
         // Create one game
         val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
 
@@ -149,5 +150,36 @@ class GameControllerIntegrationTest(
         assertEquals(0, gameResponse.playerOneBank)
         assertTrue(intArrayOf(6, 6, 6, 6, 6, 6).contentEquals(gameResponse.playerTwoBoard.toIntArray()))
         assertEquals(0, gameResponse.playerTwoBank)
+    }
+
+    @Test
+    fun `test we get ids for PlayerOne and PlayerTwo when getting a game by its uuid`() {
+        // Create one game
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+
+        // Join game
+        val joinGameResponse = client.getForObject(
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+            JoinGameResponse::class.java)
+
+        val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
+
+        assertEquals(shortUuid(newGameResponse.apiKey), gameResponse.playerOneId)
+        assertEquals(shortUuid(joinGameResponse.apiKey), gameResponse.playerTwoId)
+    }
+
+    @Test
+    fun `test we get whose turn is when getting a game by its uuid`() {
+        // Create one game
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+
+        // Join game
+        client.getForObject(
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+            JoinGameResponse::class.java)
+
+        val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
+
+        assertEquals(shortUuid(newGameResponse.apiKey), gameResponse.playerTurn)
     }
 }
