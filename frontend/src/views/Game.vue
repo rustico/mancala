@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="notYourTurn" v-if="!isPlayerTurn">Not your turn</div>
+    <div class="notYourTurn" v-if="isPlayer && !isPlayerTurn">Not your turn</div>
 
     <div class="invitation" v-if="invitationLink">
       <span class="inviteLinkText"> Please invite a friend to start playing</span>
