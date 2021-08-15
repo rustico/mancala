@@ -28,7 +28,7 @@ class GameMoveController(
 
     @PostMapping
     fun postGameMove(@RequestBody newGameMoveRequest: NewGameMoveRequest): MancalaGameResponse {
-        val mancalaGame = mancalaService.getMancalaGame(newGameMoveRequest)
+        val mancalaGame = mancalaService.getMancalaGame(newGameMoveRequest.gameUuid)
 
         val mancalaGameResponse = mancalaService.playMove(mancalaGame, newGameMoveRequest)
 

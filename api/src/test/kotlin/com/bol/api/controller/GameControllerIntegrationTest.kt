@@ -3,6 +3,7 @@ package com.bol.api.controller
 import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
+import com.bol.api.dto.SimpleGameResponse
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -45,7 +46,7 @@ class GameControllerIntegrationTest(
         assertNotNull(newGameResponse.updatedAt)
 
         // Retrieve game
-        val response = client.getForEntity("/games", Array<GameResponse>::class.java)
+        val response = client.getForEntity("/games", Array<SimpleGameResponse>::class.java)
         assertTrue(response.hasBody())
         assertEquals(1, response.body!!.size)
         val gameResponse = response.body!![0]
@@ -134,5 +135,19 @@ class GameControllerIntegrationTest(
             String::class.java)
 
         assertEquals(HttpStatus.NOT_FOUND, response.statusCode)
+    }
+
+    @Test
+    fun `test we can get a game board by its uuid`() {
+        // Create one game
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+
+        // Retrieve game
+        val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
+
+        assertTrue(intArrayOf(6, 6, 6, 6, 6, 6).contentEquals(gameResponse.playerOneBoard.toIntArray()))
+        assertEquals(0, gameResponse.playerOneBank)
+        assertTrue(intArrayOf(6, 6, 6, 6, 6, 6).contentEquals(gameResponse.playerTwoBoard.toIntArray()))
+        assertEquals(0, gameResponse.playerTwoBank)
     }
 }

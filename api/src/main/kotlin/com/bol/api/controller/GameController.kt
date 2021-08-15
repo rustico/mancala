@@ -3,6 +3,7 @@ package com.bol.api.controller
 import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
+import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.service.GameService
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -18,7 +19,7 @@ import java.util.UUID
 @RequestMapping("/games")
 class GameController(private val gameService: GameService,  private val template: SimpMessagingTemplate) {
     @GetMapping
-    fun getGames(): List<GameResponse> {
+    fun getGames(): List<SimpleGameResponse> {
         return gameService.findAll()
     }
 

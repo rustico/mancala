@@ -8,16 +8,17 @@ import com.bol.api.repository.GameRepository
 import lib.MancalaGame
 import lib.MancalaPlayer
 import org.springframework.dao.EmptyResultDataAccessException
+import java.util.UUID
 
 @Service
 class MancalaService(
     private val gameMoveRepository: GameMoveRepository,
     private val gameRepository: GameRepository) {
-    fun getMancalaGame(newGameMoveRequest: NewGameMoveRequest) : MancalaGame {
+    fun getMancalaGame(gameUuid: UUID) : MancalaGame {
         /**
          * Returns MancalaGame with its history of moves loaded
          */
-        val gameMoves = gameMoveRepository.findAllByGameUuidOrderById(newGameMoveRequest.gameUuid)
+        val gameMoves = gameMoveRepository.findAllByGameUuidOrderById(gameUuid)
         val mancalaGame = MancalaGame()
         for (gameMove in gameMoves) {
             mancalaGame.choosePitIndexAutoPlayer(gameMove.position)

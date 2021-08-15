@@ -7,6 +7,16 @@ import java.util.UUID
 class GameResponse(
     val uuid: UUID,
     val createdAt: LocalDateTime?,
+    val updatedAt: LocalDateTime?,
+    val playerOneBoard: MutableList<Int>,
+    val playerOneBank: Int,
+    val playerTwoBoard: MutableList<Int>,
+    val playerTwoBank: Int
+)
+
+class SimpleGameResponse(
+    val uuid: UUID,
+    val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?
 )
 

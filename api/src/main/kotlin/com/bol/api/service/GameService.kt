@@ -3,9 +3,11 @@ package com.bol.api.service
 import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
+import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.extension.toGameResponse
 import com.bol.api.extension.toJoinGameResponse
 import com.bol.api.extension.toNewGameResponse
+import com.bol.api.extension.toSimpleGameResponse
 import com.bol.api.model.Game
 import com.bol.api.repository.GameRepository
 import org.springframework.dao.EmptyResultDataAccessException
@@ -13,14 +15,14 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class GameService(private val gameRepository: GameRepository) {
-    fun findAll(): List<GameResponse> {
+class GameService(private val gameRepository: GameRepository, private val mancalaService: MancalaService) {
+    fun findAll(): List<SimpleGameResponse> {
         /**
-         * Returns all gamess played
+         * Returns all games played
          */
         return gameRepository
             .findAll()
-            .map { it.toGameResponse() }
+            .map { it.toSimpleGameResponse() }
     }
 
     fun findByUuid(uuid: UUID): GameResponse {
@@ -29,7 +31,8 @@ class GameService(private val gameRepository: GameRepository) {
          */
         try {
             val game = gameRepository.findByUuid(uuid)
-            return game.toGameResponse()
+            val mancala = mancalaService.getMancalaGame(uuid)
+            return game.toGameResponse(mancala)
 
         } catch (e: EmptyResultDataAccessException) {
             throw GameNotFoundException()

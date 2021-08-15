@@ -3,9 +3,21 @@ package com.bol.api.extension
 import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameResponse
+import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.model.Game
+import lib.MancalaGame
 
-fun Game.toGameResponse() = GameResponse(
+fun Game.toGameResponse(mancalaGame: MancalaGame) = GameResponse(
+    uuid = uuid,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    playerOneBoard = mancalaGame.playerOneBoard,
+    playerOneBank = mancalaGame.playerOneBank,
+    playerTwoBoard = mancalaGame.playerTwoBoard,
+    playerTwoBank = mancalaGame.playerTwoBank
+)
+
+fun Game.toSimpleGameResponse() = SimpleGameResponse(
     uuid = uuid,
     createdAt = createdAt,
     updatedAt = updatedAt
