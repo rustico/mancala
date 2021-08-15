@@ -17,7 +17,7 @@ import java.util.UUID
 @RestController
 @CrossOrigin(origins = ["*"])
 @RequestMapping("/games")
-class GameController(private val gameService: GameService,  private val template: SimpMessagingTemplate) {
+class GameController(private val gameService: GameService, private val template: SimpMessagingTemplate) {
     @GetMapping
     fun getGames(): List<SimpleGameResponse> {
         return gameService.findAll()
@@ -39,7 +39,7 @@ class GameController(private val gameService: GameService,  private val template
         @PathVariable invitationApiKey: UUID,
     ): JoinGameResponse {
         val joinGame = gameService.joinGame(uuid, invitationApiKey)
-        this.template.convertAndSend("/topic/${invitationApiKey}", "holines")
+        template.convertAndSend("/topic/${invitationApiKey}", "holines")
         return joinGame
     }
 }
