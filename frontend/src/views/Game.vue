@@ -1,12 +1,10 @@
 <template>
   <div class="game">
       <div v-if="invitationLink"> {{ invitationLink }} </div>
-        <button id="send" class="btn btn-default" type="submit" @click.prevent="send">Send</button>
-
         <div> {{oppositeBank}} {{oppositeBoard}} </div>
         <div> {{playerBoard}} {{playerBank}} </div>
 
-        <div> 
+        <div v-if='apiKey'> 
             <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(1)">1</button>
             <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(2)">2</button>
             <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(3)">3</button>
