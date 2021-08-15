@@ -1,16 +1,16 @@
 <template>
     <div class="board">
         <div class="section endsection">
-            <MancalaPit :totalPits="oppositeBank" height="120"></MancalaPit>
+            <MancalaPit :totalPits="oppositeBank" height="120" isTop="true"></MancalaPit>
         </div>
         <div class="section midsection">
         <div class="midrow topmid">
-            <MancalaPit :totalPits="oppositeBoard[0]" height="60"></MancalaPit>
-            <MancalaPit :totalPits="oppositeBoard[1]" height="60"></MancalaPit>
-            <MancalaPit :totalPits="oppositeBoard[2]" height="60"></MancalaPit>
-            <MancalaPit :totalPits="oppositeBoard[3]" height="60"></MancalaPit>
-            <MancalaPit :totalPits="oppositeBoard[4]" height="60"></MancalaPit>
-            <MancalaPit :totalPits="oppositeBoard[5]" height="60"></MancalaPit>
+            <MancalaPit :totalPits="oppositeBoard[0]" height="60" isTop="true"></MancalaPit>
+            <MancalaPit :totalPits="oppositeBoard[1]" height="60" isTop="true"></MancalaPit>
+            <MancalaPit :totalPits="oppositeBoard[2]" height="60" isTop="true"></MancalaPit>
+            <MancalaPit :totalPits="oppositeBoard[3]" height="60" isTop="true"></MancalaPit>
+            <MancalaPit :totalPits="oppositeBoard[4]" height="60" isTop="true"></MancalaPit>
+            <MancalaPit :totalPits="oppositeBoard[5]" height="60" isTop="true"></MancalaPit>
         </div>
         <div class="midrow">
             <MancalaPit :totalPits="playerBoard[0]" height="60"></MancalaPit>

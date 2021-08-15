@@ -1,6 +1,6 @@
 <template>
     <div class="pit">
-        {{totalPits}}
+        <span class="totalPits" v-bind:class="{ totalPitsTop: isTop }">{{totalPits}}</span>
         <span 
             v-for="n in totalPits" 
             class="stone"
@@ -17,7 +17,8 @@ export default {
   name: 'MancalaPit',
   props: {
     totalPits: Number,
-    height: Number
+    height: Number,
+    isTop: Boolean
   },
   methods: {
       getColor() {
@@ -45,5 +46,16 @@ export default {
   width: 25px;
   height: 25px;
   background-color: red;
+}
+
+.totalPits {
+    position: absolute;
+    left: 45%;
+    bottom: -26px;
+    font-size: 23px;
+}
+
+.totalPitsTop {
+    top: -26px;
 }
 </style>

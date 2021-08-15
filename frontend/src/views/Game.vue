@@ -1,24 +1,34 @@
 <template>
   <div class="game">
-      <div v-if="invitationLink"> {{ invitationLink }} </div>
-        <div> {{oppositeBank}} {{oppositeBoard}} </div>
-        <div> {{playerBoard}} {{playerBank}} </div>
+    <MancalaBoard
+      :playerBoard="playerBoard"
+      :playerBank="playerBank"
+      :oppositeBoard="oppositeBoard"
+      :oppositeBank="oppositeBank"
+    ></MancalaBoard>
 
-        <MancalaBoard
-          :playerBoard="playerBoard"
-          :playerBank="playerBank"
-          :oppositeBoard="oppositeBoard"
-          :oppositeBank="oppositeBank"
-        ></MancalaBoard>
+    <div v-if='isPlayer && !invitationLink'>
+      <div class="choosePitText">Choose a pit to move stones</div>
+      <div class="choosePit"> 
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(1)">1</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(2)">2</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(3)">3</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(4)">4</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(5)">5</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(6)">6</button>
+      </div>
+    </div>
 
-        <div v-if='isPlayer'> 
-            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(1)">1</button>
-            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(2)">2</button>
-            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(3)">3</button>
-            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(4)">4</button>
-            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(5)">5</button>
-            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(6)">6</button>
-        </div>
+    <div class="notYourTurn" v-if="!isPlayerTurn">Not your turn</div>
+
+    <div class="invitation" v-if="invitationLink">
+      <span class="inviteLinkText"> Please invite a friend to start playing</span>
+      <div>
+        <span class="inviteLinkText"> Invite Link:</span>
+        <input type="text" :value="invitationLink" class="invitationLink">
+        <button @click="copyLink()" class="copyButton">Copy</button> 
+      </div>
+    </div>
   </div>
 </template>
 
@@ -73,6 +83,9 @@ export default {
 
         this.isPlayerTurn = localStorage.apiKey.substring(0, 9) == data.playerTurn
     },
+    copyLink() {
+      navigator.clipboard.writeText(this.invitationLink);
+    },
     send(position) {
         let data = {
             position: position,
@@ -105,3 +118,45 @@ export default {
   }
 }
 </script>
+
+<style>
+.invitation {
+  margin-top: 50px;
+}
+
+.invitationLink {
+  margin-top: 5px;
+  padding: 6px 6px;
+  box-sizing: border-box;
+  width: 25%;
+}
+
+.copyButton {
+  /* background-image: url('~@/assets/copy.svg'); */
+  font-size: 13px;
+  padding: 5px;
+}
+
+.inviteLinkText {
+  font-weight: bold;
+}
+
+.choosePitButton {
+    height: 50px;
+    width: 50px;
+    font-size: 25px;
+    margin: 5px;
+    background-color: rgb(121 56 56);
+    border: none;
+}
+
+.choosePitText {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.notYourTurn {
+  margin-top: 10px;
+  font-weight: bold;
+}
+</style>
