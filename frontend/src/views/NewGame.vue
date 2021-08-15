@@ -1,14 +1,9 @@
-<template>
-  <div class="home">
-  </div>
-</template>
-
 <script>
 import config from '../config'
 import axios from "axios";
 
 export default {
-  name: 'Home',
+  name: 'NewGame',
   created() {
     localStorage.clear()
     axios.get(`${config.API_URL}/games/new`)
