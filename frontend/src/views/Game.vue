@@ -42,14 +42,23 @@ export default {
         if(localStorage.invitationApiKey) {
             this.invitationLink = `${window.location.origin}/${localStorage.gameUuid}/join/${localStorage.invitationApiKey}`;
         }
-
-        this.playerBoard = result.data.playerOneBoard;
-        this.playerBank = result.data.playerOneBank;
-        this.oppositeBoard = result.data.playerTwoBoard;
-        this.oppositeBank = result.data.playerTwoBank;
+        this.updateState(result.data);
     });
   },
   methods: {
+    updateState(data) {
+        if(localStorage.apiKey && localStorage.apiKey.substring(0, 9) == data.playerTwoId) {
+          this.playerBoard = data.playerTwoBoard;
+          this.playerBank = data.playerTwoBank;
+          this.oppositeBoard = data.playerOneBoard.reverse();
+          this.oppositeBank = data.playerOneBank;
+        } else {
+          this.playerBoard = data.playerOneBoard;
+          this.playerBank = data.playerOneBank;
+          this.oppositeBoard = data.playerTwoBoard.reverse();
+          this.oppositeBank = data.playerTwoBank;
+        }
+    },
     send(position) {
         let data = {
             position: position,

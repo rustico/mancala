@@ -1,10 +1,12 @@
 package com.bol.api.controller
 
 import com.bol.api.dto.GameMoveResponse
-import com.bol.api.dto.MancalaGameResponse
+import com.bol.api.dto.GameResponse
+import com.bol.api.dto.JoinGameResponse
 import org.junit.jupiter.api.Assertions.*
 import com.bol.api.dto.NewGameMoveRequest
 import com.bol.api.dto.NewGameResponse
+import com.bol.api.utils.shortUuid
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -137,7 +139,7 @@ class GameMoveControllerIntegrationTest(
         val response = client.postForEntity(
             "/gamesmoves",
             newGameMoveRequest,
-            MancalaGameResponse::class.java
+            GameResponse::class.java
         )
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -162,7 +164,7 @@ class GameMoveControllerIntegrationTest(
         client.postForEntity(
             "/gamesmoves",
             playerOneGameMoveRequest,
-            MancalaGameResponse::class.java
+            GameResponse::class.java
         )
 
         // Create another move
@@ -175,7 +177,7 @@ class GameMoveControllerIntegrationTest(
         val response = client.postForEntity(
             "/gamesmoves",
             playerOneGameSecondMoveRequest,
-            MancalaGameResponse::class.java
+            GameResponse::class.java
         )
 
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -200,7 +202,7 @@ class GameMoveControllerIntegrationTest(
         client.postForEntity(
             "/gamesmoves",
             playerOneGameMoveRequest,
-            MancalaGameResponse::class.java
+            GameResponse::class.java
         )
 
         // Create another move
@@ -217,5 +219,58 @@ class GameMoveControllerIntegrationTest(
                 Any::class.java
             )
         }
+    }
+
+    @Test
+    fun `test when creating a new move it returns the players ids`() {
+        // Create one game
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+
+        // Join game
+        val joinGameResponse = client.getForObject(
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+            JoinGameResponse::class.java)
+
+        // Create a move
+        val newGameMoveRequest = NewGameMoveRequest(
+            position = 1,
+            playerApiKey = newGameResponse.apiKey,
+            gameUuid = newGameResponse.uuid
+        )
+
+        val mancalaGameResponse = client.postForObject(
+            "/gamesmoves",
+            newGameMoveRequest,
+            GameResponse::class.java
+        )
+
+        assertEquals(shortUuid(newGameResponse.apiKey), mancalaGameResponse.playerOneId)
+        assertEquals(shortUuid(joinGameResponse.apiKey), mancalaGameResponse.playerTwoId)
+    }
+
+    @Test
+    fun `test when creating a new move it returns the player turn`() {
+        // Create one game
+        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+
+        // Join game
+        client.getForObject(
+            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+            JoinGameResponse::class.java)
+
+        // Create a move
+        val newGameMoveRequest = NewGameMoveRequest(
+            position = 1,
+            playerApiKey = newGameResponse.apiKey,
+            gameUuid = newGameResponse.uuid
+        )
+
+        val mancalaGameResponse = client.postForObject(
+            "/gamesmoves",
+            newGameMoveRequest,
+            GameResponse::class.java
+        )
+
+        assertEquals(shortUuid(newGameResponse.apiKey), mancalaGameResponse.playerTurn)
     }
 }

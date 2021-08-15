@@ -1,7 +1,6 @@
 package com.bol.api.service
 
 import org.springframework.stereotype.Service
-import com.bol.api.dto.MancalaGameResponse
 import com.bol.api.dto.NewGameMoveRequest
 import com.bol.api.repository.GameMoveRepository
 import com.bol.api.repository.GameRepository
@@ -27,7 +26,7 @@ class MancalaService(
         return mancalaGame
     }
 
-    fun playMove(mancalaGame: MancalaGame, newGameMoveRequest: NewGameMoveRequest): MancalaGameResponse {
+    fun playMove(mancalaGame: MancalaGame, newGameMoveRequest: NewGameMoveRequest) {
         /**
          * Plays the move in the MancalaGame
          */
@@ -46,13 +45,6 @@ class MancalaService(
             }
 
             mancalaGame.choosePitIndex(newGameMoveRequest.position, mancalaPlayer)
-
-            return MancalaGameResponse(
-                playerOneBoard = mancalaGame.playerOneBoard,
-                playerOneBank = mancalaGame.playerOneBank,
-                playerTwoBoard = mancalaGame.playerTwoBoard,
-                playerTwoBank = mancalaGame.playerTwoBank
-            )
         } catch (e: EmptyResultDataAccessException) {
             throw GameNotFoundException()
         }

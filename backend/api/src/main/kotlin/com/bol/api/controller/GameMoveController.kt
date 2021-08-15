@@ -1,7 +1,7 @@
 package com.bol.api.controller
 
 import com.bol.api.dto.GameMoveResponse
-import com.bol.api.dto.MancalaGameResponse
+import com.bol.api.dto.GameResponse
 import com.bol.api.dto.NewGameMoveRequest
 import com.bol.api.service.GameMoveService
 import com.bol.api.service.MancalaService
@@ -29,21 +29,15 @@ class GameMoveController(
     }
 
     @PostMapping
-    fun postGameMove(@RequestBody newGameMoveRequest: NewGameMoveRequest): MancalaGameResponse {
+    fun postGameMove(@RequestBody newGameMoveRequest: NewGameMoveRequest): GameResponse {
         val mancalaGame = mancalaService.getMancalaGame(newGameMoveRequest.gameUuid)
 
-        val mancalaGameResponse = mancalaService.playMove(mancalaGame, newGameMoveRequest)
+        mancalaService.playMove(mancalaGame, newGameMoveRequest)
 
-        gameMoveService.create(newGameMoveRequest)
+        val gameResponse = gameMoveService.create(mancalaGame, newGameMoveRequest)
 
-        val gameStatusMessage = MancalaGameResponse(
-            playerOneBoard = mancalaGame.playerOneBoard,
-            playerOneBank =  mancalaGame.playerOneBank,
-            playerTwoBoard =  mancalaGame.playerTwoBoard,
-            playerTwoBank = mancalaGame.playerTwoBank
-        )
-        template.convertAndSend("/topic/${newGameMoveRequest.gameUuid}", gameStatusMessage)
+        template.convertAndSend("/topic/${newGameMoveRequest.gameUuid}", gameResponse)
 
-        return mancalaGameResponse
+        return gameResponse
     }
 }
