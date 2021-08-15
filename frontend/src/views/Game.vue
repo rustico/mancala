@@ -4,34 +4,14 @@
         <div> {{oppositeBank}} {{oppositeBoard}} </div>
         <div> {{playerBoard}} {{playerBank}} </div>
 
-        <div class="board">
-          <div class="section endsection">
-              <div class="pot" id="mb"></div> 
-          </div>
-          <div class="section midsection">
-            <div class="midrow">
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-            </div>
-            <div class="midrow">
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-              <div class="pot"></div>
-            </div>
-          </div>
-          <div class="section endsection">
-              <div class="pot"></div>        
-          </div>
-        </div>
+        <MancalaBoard
+          :playerBoard="playerBoard"
+          :playerBank="playerBank"
+          :oppositeBoard="oppositeBoard"
+          :oppositeBank="oppositeBank"
+        ></MancalaBoard>
 
-        <div v-if='apiKey'> 
+        <div v-if='isPlayer'> 
             <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(1)">1</button>
             <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(2)">2</button>
             <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(3)">3</button>
@@ -47,10 +27,13 @@ import config from '../config'
 import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
-
+import MancalaBoard from '@/components/MancalaBoard.vue'
 
 export default {
   name: 'Game',
+  components: {
+    MancalaBoard
+  },
   data () {
     return {
       invitationLink: null,
@@ -59,10 +42,13 @@ export default {
       oppositeBoard: [],
       oppositeBank: 0,
       isPlayerTurn: false,
+      isPlayer: false,
     }
   },
   created() {
     localStorage.gameUuid = this.$route.params.uuid;
+    this.isPlayer = !!localStorage.apiKey;
+
     axios.get(`${config.API_URL}/games/${localStorage.gameUuid}`)
     .then((result) => {
         if(localStorage.invitationApiKey) {
@@ -119,57 +105,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.board
-{
-  display:flex;
-  height:200px;
-  width:800px;
-  border-radius:50px;
-  padding:30px;
-  background-color: rgb(171, 98, 39);
-  margin: auto;
-}
-
-.section
-{
-  margin:5px;
-}
-
-.endsection
-{
-  display:flex;
-  flex-grow:1;
-}
-
-.midsection
-{
-  display:flex;
-  flex-direction:column;
-  flex-grow:6;
-}
-
-.midrow
-{
-  display:flex;
-  flex-grow:1;
-}
-
-.pot
-{
-  position:relative;
-  background-color: rgb(101, 52, 46);
-  flex-grow:1;
-  margin:5px;
-  border-radius:50px;
-}
-
-.bead
-{
-  position:absolute;
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-}
-</style>
