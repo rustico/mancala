@@ -9,6 +9,7 @@ import axios from "axios";
 export default {
   name: 'Home',
   created() {
+    localStorage.clear()
     axios.get(`${config.API_URL}/games/new`)
     .then((result) => {
       localStorage.apiKey = result.data.apiKey

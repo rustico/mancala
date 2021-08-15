@@ -7,12 +7,12 @@
         <div> {{playerBoard}} {{playerBank}} </div>
 
         <div> 
-            <button id="send" class="btn btn-default" type="button" @click="send(1)">1</button>
-            <button id="send" class="btn btn-default" type="button" @click="send(2)">2</button>
-            <button id="send" class="btn btn-default" type="button" @click="send(3)">3</button>
-            <button id="send" class="btn btn-default" type="button" @click="send(4)">4</button>
-            <button id="send" class="btn btn-default" type="button" @click="send(5)">5</button>
-            <button id="send" class="btn btn-default" type="button" @click="send(6)">6</button>
+            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(1)">1</button>
+            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(2)">2</button>
+            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(3)">3</button>
+            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(4)">4</button>
+            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(5)">5</button>
+            <button :disabled="!isPlayerTurn" id="send" class="btn btn-default" type="button" @click="send(6)">6</button>
         </div>
   </div>
 </template>
@@ -33,6 +33,7 @@ export default {
       playerBank: 0,
       oppositeBoard: [],
       oppositeBank: 0,
+      isPlayerTurn: false,
     }
   },
   created() {
@@ -58,6 +59,8 @@ export default {
           this.oppositeBoard = data.playerTwoBoard.reverse();
           this.oppositeBank = data.playerTwoBank;
         }
+
+        this.isPlayerTurn = localStorage.apiKey.substring(0, 9) == data.playerTurn
     },
     send(position) {
         let data = {
@@ -73,10 +76,7 @@ export default {
       this.stompClient.connect({}, () => {
           this.stompClient.subscribe(`/topic/${localStorage.gameUuid}`, payload => {
             let body = JSON.parse(payload.body)
-            this.playerBoard = body.playerOneBoard;
-            this.playerBank = body.playerOneBank;
-            this.oppositeBoard = body.playerTwoBoard;
-            this.oppositeBank = body.playerTwoBank;
+            this.updateState(body);
           });
 
           if(localStorage.invitationApiKey) {

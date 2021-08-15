@@ -4,6 +4,7 @@ import axios from "axios";
 export default {
   name: 'Invitation',
   created() {
+    localStorage.clear()
     let gameUuid = this.$route.params.uuid;
     let apiKey = this.$route.params.apiKey;
     axios.get(`${config.API_URL}/games/${gameUuid}/join/${apiKey}`)
