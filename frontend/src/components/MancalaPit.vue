@@ -8,7 +8,8 @@
                 'background-color': getColor(),
                 'top': Math.floor(Math.random() * height) + 'px',
                 'left': Math.floor(Math.random() * 60) + 'px'
-            }"></span>
+            }"
+            v-bind:key="n"></span>
     </div>
 </template>
 
