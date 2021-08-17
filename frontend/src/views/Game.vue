@@ -5,18 +5,24 @@
       :playerBank="playerBank"
       :oppositeBoard="oppositeBoard"
       :oppositeBank="oppositeBank"
+      :isPlayerTwo="isPlayerTwo"
     ></MancalaBoard>
 
     <div v-if='isPlayer && !invitationLink'>
       <div class="choosePitText">Choose a pit to move stones</div>
       <div class="choosePit"> 
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(1)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">1</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(2)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">2</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(3)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">3</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(4)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">4</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(5)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">5</button>
-          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(6)" v-bind:class="{ buttonDisabled: !isPlayerTurn}">6</button>
-
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(1)" 
+                   v-bind:class="{ buttonDisabled: !isPlayerTurn, oppositePit: isPlayerTwo}">1</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(2)" 
+                   v-bind:class="{ buttonDisabled: !isPlayerTurn, oppositePit: isPlayerTwo}">2</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(3)"
+                   v-bind:class="{ buttonDisabled: !isPlayerTurn, oppositePit: isPlayerTwo}">3</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(4)"
+                   v-bind:class="{ buttonDisabled: !isPlayerTurn, oppositePit: isPlayerTwo}">4</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(5)"
+                   v-bind:class="{ buttonDisabled: !isPlayerTurn, oppositePit: isPlayerTwo}">5</button>
+          <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(6)"
+                   v-bind:class="{ buttonDisabled: !isPlayerTurn, oppositePit: isPlayerTwo}">6</button>
       </div>
     </div>
 
@@ -54,16 +60,23 @@ export default {
       oppositeBank: 0,
       isPlayerTurn: false,
       isPlayer: false,
+      isPlayerTwo: false,
     }
   },
   created() {
     localStorage.gameUuid = this.$route.params.uuid;
-    this.isPlayer = !!localStorage.apiKey;
 
     axios.get(`${config.API_URL}/games/${localStorage.gameUuid}`)
     .then((result) => {
-        if(localStorage.invitationApiKey) {
-            this.invitationLink = `${window.location.origin}/${localStorage.gameUuid}/join/${localStorage.invitationApiKey}`;
+        let playerId = localStorage.apiKey.substring(0, 9)
+        this.isPlayer = playerId === result.data.playerOneId || playerId === result.data.playerTwoId;
+
+        if(this.isPlayer) {
+          if(localStorage.invitationApiKey) {
+              this.invitationLink = `${window.location.origin}/${localStorage.gameUuid}/join/${localStorage.invitationApiKey}`;
+          }
+
+          this.isPlayerTwo = playerId == result.data.playerTwoId;
         }
         this.updateState(result.data);
     });
@@ -149,6 +162,11 @@ export default {
     margin: 5px;
     background-color: rgb(121 56 56);
     border: none;
+    color: whitesmoke;
+}
+
+.choosePitButton.oppositePit {
+    background-color: rgb(32 66 30);
 }
 
 .choosePitButton:hover {
