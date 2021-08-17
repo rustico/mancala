@@ -6,7 +6,7 @@ export default {
   name: 'NewGame',
   created() {
     localStorage.clear()
-    axios.get(`${config.API_URL}/games/new`)
+    axios.post(`${config.API_URL}/games/new`, {numberOfStones: 6})
     .then((result) => {
       localStorage.apiKey = result.data.apiKey
       localStorage.invitationApiKey = result.data.invitationApiKey
