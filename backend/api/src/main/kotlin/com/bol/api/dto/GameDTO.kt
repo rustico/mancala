@@ -23,6 +23,10 @@ class SimpleGameResponse(
     val updatedAt: LocalDateTime?
 )
 
+class NewGameRequest(
+    val numberOfStones: Int
+)
+
 class NewGameResponse(
     val uuid: UUID,
     val apiKey: UUID,

@@ -30,6 +30,9 @@ class Game(
     @Column(nullable = false)
     val playerTwoApiKey: UUID = UUID.randomUUID(),
 
+    @Column(nullable = false)
+    var numberOfStones: Int = 6,
+
     @Column(nullable = true)
     var winner: Int? = null,
 

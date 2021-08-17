@@ -2,6 +2,7 @@ package com.bol.api.controller
 
 import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
+import com.bol.api.dto.NewGameRequest
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.utils.shortUuid
@@ -39,7 +40,14 @@ class GameControllerIntegrationTest(
         assertEquals(0, emptyEntity.body?.size)
 
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
+
         assertNotNull(newGameResponse.apiKey)
         assertNotNull(newGameResponse.invitationApiKey)
         assertNotNull(newGameResponse.uuid)
@@ -59,7 +67,13 @@ class GameControllerIntegrationTest(
     @Test
     fun `test if we can get a game by its uuid`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Retrieve game
         val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
@@ -71,7 +85,13 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we can't get a game by using an unknow uuid`() {
         // Create one game
-        client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Retrieve game
         val response = client.getForEntity("/games/${UUID.randomUUID()}", String::class.java)
@@ -81,7 +101,14 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we can join a game`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
+
 
         // Join game
         val joinGameResponse = client.getForObject(
@@ -97,7 +124,14 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we cannot join a game that has already started`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
+
 
         // Join game
         client.getForObject(
@@ -115,7 +149,14 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we cannot join a game with an invalid api key`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
+
 
         // Join game
         val response = client.getForEntity(
@@ -128,7 +169,14 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we cannot join a game with an unknown game uuid`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
+
 
         // Join game
         val response = client.getForEntity(
@@ -141,7 +189,13 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we get a game board by its uuid`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Retrieve game
         val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
@@ -155,7 +209,13 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we get ids for PlayerOne and PlayerTwo when getting a game by its uuid`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Join game
         val joinGameResponse = client.getForObject(
@@ -171,7 +231,13 @@ class GameControllerIntegrationTest(
     @Test
     fun `test we get whose turn is when getting a game by its uuid`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Join game
         client.getForObject(

@@ -5,6 +5,7 @@ import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
 import org.junit.jupiter.api.Assertions.*
 import com.bol.api.dto.NewGameMoveRequest
+import com.bol.api.dto.NewGameRequest
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.utils.shortUuid
 import org.junit.jupiter.api.AfterEach
@@ -35,7 +36,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test we can create a new game move`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
@@ -56,7 +63,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test we cannot create a new game move without a valid api key`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
@@ -94,7 +107,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test we can get all game moves`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
@@ -127,7 +146,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test when can create a new game move we received the new board state`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
@@ -152,7 +177,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test when creating multiples game moves the board maintains its state`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Create a move
         val playerOneGameMoveRequest = NewGameMoveRequest(
@@ -190,7 +221,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test PlayerOne cannot play when is not his turn`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Create a move
         val playerOneGameMoveRequest = NewGameMoveRequest(
@@ -224,7 +261,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test when creating a new move it returns the players ids`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Join game
         val joinGameResponse = client.getForObject(
@@ -251,7 +294,13 @@ class GameMoveControllerIntegrationTest(
     @Test
     fun `test when creating a new move it returns the player turn`() {
         // Create one game
-        val newGameResponse = client.getForObject("/games/new", NewGameResponse::class.java)
+        val newGameRequest = NewGameRequest(
+            numberOfStones = 6
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
 
         // Join game
         client.getForObject(
