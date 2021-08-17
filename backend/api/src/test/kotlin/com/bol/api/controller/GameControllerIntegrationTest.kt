@@ -88,7 +88,8 @@ class GameControllerIntegrationTest(
         val newGameRequest = NewGameRequest(
             numberOfStones = 6
         )
-        val newGameResponse = client.postForObject(
+
+        client.postForObject(
             "/games/new",
             newGameRequest,
             NewGameResponse::class.java)
@@ -247,5 +248,23 @@ class GameControllerIntegrationTest(
         val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
 
         assertEquals(shortUuid(newGameResponse.apiKey), gameResponse.playerTurn)
+    }
+
+    @Test
+    fun `test we can set the number of stones for the game`() {
+        // Create one game
+        val numberOfStones = 4
+        val newGameRequest = NewGameRequest(
+            numberOfStones = numberOfStones
+        )
+        val newGameResponse = client.postForObject(
+            "/games/new",
+            newGameRequest,
+            NewGameResponse::class.java)
+
+        val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
+
+        val numberOfPIts = 6
+        assertEquals(numberOfStones * numberOfPIts, gameResponse.playerOneBoard.sum())
     }
 }

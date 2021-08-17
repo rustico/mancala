@@ -2,12 +2,12 @@ package com.bol.api.controller
 
 import com.bol.api.dto.GameResponse
 import com.bol.api.dto.JoinGameResponse
-import com.bol.api.dto.NewGameMoveRequest
 import com.bol.api.dto.NewGameRequest
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.service.GameService
 import org.springframework.messaging.simp.SimpMessagingTemplate
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,12 +29,12 @@ class GameController(private val gameService: GameService, private val template:
 
     @PostMapping("/new")
     fun createGame(@RequestBody newGameRequest: NewGameRequest): NewGameResponse {
-        return gameService.create()
+        return gameService.create(numberOfStones = newGameRequest.numberOfStones)
     }
 
     @GetMapping("/{uuid}")
     fun getGameByUuid(@PathVariable uuid: UUID): GameResponse {
-        return gameService.findByUuid(uuid)
+        return gameService.findByUuid(uuid = uuid)
     }
 
     @GetMapping("/{uuid}/join/{invitationApiKey}")
@@ -42,7 +42,7 @@ class GameController(private val gameService: GameService, private val template:
         @PathVariable uuid: UUID,
         @PathVariable invitationApiKey: UUID,
     ): JoinGameResponse {
-        val joinGame = gameService.joinGame(uuid, invitationApiKey)
+        val joinGame = gameService.joinGame(gameUuid = uuid, invitationApiKey = invitationApiKey)
         template.convertAndSend("/topic/${invitationApiKey}", "holines")
         return joinGame
     }

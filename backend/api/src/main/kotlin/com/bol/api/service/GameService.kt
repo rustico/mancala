@@ -39,13 +39,13 @@ class GameService(private val gameRepository: GameRepository, private val mancal
         }
     }
 
-    fun create(): NewGameResponse {
+    fun create(numberOfStones: Int): NewGameResponse {
         /**
          * Game is created by PlayerOne.
          *
          * Returns a [NewGameResponse] with the API keys to play the game and invite another player
          */
-        return gameRepository.save(Game()).toNewGameResponse()
+        return gameRepository.save(Game(numberOfStones=numberOfStones)).toNewGameResponse()
     }
 
     fun joinGame(gameUuid: UUID, invitationApiKey: UUID): JoinGameResponse {
