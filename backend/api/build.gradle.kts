@@ -27,6 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.junit.jupiter:junit-jupiter:5.7.0")
     implementation("org.postgresql:postgresql")
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
