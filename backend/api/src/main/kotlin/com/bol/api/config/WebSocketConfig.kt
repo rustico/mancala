@@ -1,4 +1,4 @@
-package com.bol.api.socket
+package com.bol.api.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
