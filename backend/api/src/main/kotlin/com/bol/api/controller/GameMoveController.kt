@@ -20,7 +20,6 @@ import java.util.UUID
 @RequestMapping("/gamesmoves")
 class GameMoveController(
     private val gameMoveService: GameMoveService,
-    private val mancalaService: MancalaService,
     private val template: SimpMessagingTemplate
 ) {
     @GetMapping("/{gameUuid}")

@@ -7,7 +7,6 @@ import com.bol.api.dto.NewGameResponse
 import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.service.GameService
 import org.springframework.messaging.simp.SimpMessagingTemplate
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
