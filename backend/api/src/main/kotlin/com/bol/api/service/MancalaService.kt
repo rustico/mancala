@@ -12,15 +12,11 @@ class MancalaService() {
         /**
          * Returns MancalaGame with its history of moves loaded
          */
-        try {
-            val mancalaGame = MancalaGame(numberOfStones = numberOfStones)
-            for (gameMove in gameMoves) {
-                mancalaGame.choosePitIndexAutoPlayer(gameMove.position)
-            }
-
-            return mancalaGame
-        } catch (e: EmptyResultDataAccessException) {
-            throw GameNotFoundException()
+        val mancalaGame = MancalaGame(numberOfStones = numberOfStones)
+        for (gameMove in gameMoves) {
+            mancalaGame.choosePitIndexAutoPlayer(gameMove.position)
         }
+
+        return mancalaGame
     }
 }
