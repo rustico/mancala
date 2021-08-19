@@ -30,11 +30,7 @@ class GameMoveController(
 
     @PostMapping
     fun postGameMove(@RequestBody newGameMoveRequest: NewGameMoveRequest): GameResponse {
-        val mancalaGame = mancalaService.getMancalaGame(newGameMoveRequest.gameUuid)
-
-        mancalaService.playMove(mancalaGame, newGameMoveRequest)
-
-        val gameResponse = gameMoveService.create(mancalaGame, newGameMoveRequest)
+        val gameResponse = gameMoveService.create(newGameMoveRequest)
 
         template.convertAndSend("/topic/${newGameMoveRequest.gameUuid}", gameResponse)
 

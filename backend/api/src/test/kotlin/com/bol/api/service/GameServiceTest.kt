@@ -2,6 +2,8 @@ package com.bol.api.service
 
 import com.bol.api.extension.toGameResponse
 import com.bol.api.model.Game
+import com.bol.api.model.GameMove
+import com.bol.api.repository.GameMoveRepository
 import com.bol.api.repository.GameRepository
 import io.mockk.every
 import lib.MancalaGame
@@ -19,11 +21,14 @@ internal class GameServiceTest() {
         val game = Game()
         every { gameRepository.findByUuid(game.uuid) } returns game
 
-        val mancalaGame = MancalaGame()
-        val mancalaService= mockk<MancalaService>()
-        every { mancalaService.getMancalaGame(game.uuid) } returns mancalaGame
+        val gameMoveRepository = mockk<GameMoveRepository>()
+        every { gameMoveRepository.findAllByGameUuidOrderById(game.uuid)} returns mutableListOf<GameMove>()
 
-        val gameService = GameService(gameRepository, mancalaService)
+        val mancalaGame = MancalaGame()
+        val mancalaService = mockk<MancalaService>()
+        every { mancalaService.getMancalaGame(any(), any()) } returns mancalaGame
+
+        val gameService = GameService(gameRepository, gameMoveRepository, mancalaService)
         val gameResponse = gameService.findByUuid(game.uuid)
 
         val expectedGameResponse = game.toGameResponse(mancalaGame)
@@ -39,35 +44,23 @@ internal class GameServiceTest() {
         assertEquals(expectedGameResponse.playerTurn, gameResponse.playerTurn)
     }
 
-    @Test
-    fun `test it should throw GameNotFoundException when MancalaService doesn't find game by its UUID`() {
-        val gameRepository = mockk<GameRepository>()
-        val game = Game()
-        every { gameRepository.findByUuid(game.uuid) } returns Game()
+        @Test
+        fun `test it should throw GameNotFoundException when game is not found by its UUID`() {
+            val gameRepository = mockk<GameRepository>()
+            val game = Game()
+            every { gameRepository.findByUuid(any()) } throws GameNotFoundException()
 
-        val mancalaService = mockk<MancalaService>()
+            val gameMoveRepository = mockk<GameMoveRepository>()
+            every { gameMoveRepository.findAllByGameUuidOrderById(game.uuid)} returns mutableListOf<GameMove>()
 
-        val gameService = GameService(gameRepository, mancalaService)
+            val mancalaGame = MancalaGame()
+            val mancalaService = mockk<MancalaService>()
+            every { mancalaService.getMancalaGame(any(), any()) } returns mancalaGame
 
-        val randomUuid = UUID.randomUUID()
-        every { mancalaService.getMancalaGame(randomUuid) } throws GameNotFoundException()
+            val gameService = GameService(gameRepository, gameMoveRepository, mancalaService)
 
-        assertThrows(GameNotFoundException::class.java) {
-            gameService.findByUuid(randomUuid)
+            assertThrows(GameNotFoundException::class.java) {
+                gameService.findByUuid(UUID.randomUUID())
+            }
         }
-    }
-
-    @Test
-    fun `test it should throw GameNotFoundException when GameService doesn't find game by its UUID`() {
-        val gameRepository = mockk<GameRepository>()
-        val mancalaService = mockk<MancalaService>()
-
-        val gameService = GameService(gameRepository, mancalaService)
-
-        val randomUuid = UUID.randomUUID()
-        every { gameRepository.findByUuid(randomUuid) } throws GameNotFoundException()
-        assertThrows(GameNotFoundException::class.java) {
-            gameService.findByUuid(randomUuid)
-        }
-    }
 }
