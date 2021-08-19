@@ -27,7 +27,7 @@ class GameController(private val gameService: GameService, private val template:
         return gameService.findAll()
     }
 
-    @PostMapping("/new")
+    @PostMapping
     fun createGame(@RequestBody newGameRequest: NewGameRequest): NewGameResponse {
         return gameService.create(numberOfStones = newGameRequest.numberOfStones)
     }

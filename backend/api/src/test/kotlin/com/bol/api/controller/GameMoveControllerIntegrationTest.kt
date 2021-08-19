@@ -40,7 +40,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
@@ -67,7 +67,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
@@ -111,7 +111,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
@@ -150,7 +150,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
@@ -181,7 +181,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
@@ -225,7 +225,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
@@ -265,7 +265,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
@@ -298,7 +298,7 @@ class GameMoveControllerIntegrationTest(
             numberOfStones = 6
         )
         val newGameResponse = client.postForObject(
-            "/games/new",
+            "/games",
             newGameRequest,
             NewGameResponse::class.java)
 
