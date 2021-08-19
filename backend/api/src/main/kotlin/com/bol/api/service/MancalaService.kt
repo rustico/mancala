@@ -1,12 +1,8 @@
 package com.bol.api.service
 
 import org.springframework.stereotype.Service
-import com.bol.api.dto.NewGameMoveRequest
 import com.bol.api.model.GameMove
-import com.bol.api.repository.GameMoveRepository
-import com.bol.api.repository.GameRepository
 import lib.MancalaGame
-import lib.MancalaPlayer
 import org.springframework.dao.EmptyResultDataAccessException
 
 

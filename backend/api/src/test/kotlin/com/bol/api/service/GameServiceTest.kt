@@ -89,7 +89,7 @@ internal class GameServiceTest() {
     fun `test it should join a created Game with a valid invitation api key`() {
         val gameRepository = mockk<GameRepository>()
         val game = Game()
-        every { gameRepository.findByUuid(game.uuid) } returns game
+        every { gameRepository.findByUuidPessimistic(game.uuid) } returns game
         every { gameRepository.save(game) } returns game
 
         val gameMoveRepository = mockk<GameMoveRepository>()
@@ -109,7 +109,7 @@ internal class GameServiceTest() {
         val gameRepository = mockk<GameRepository>()
         val game = Game()
         game.invitationApiKey = null
-        every { gameRepository.findByUuid(game.uuid) } returns game
+        every { gameRepository.findByUuidPessimistic(game.uuid) } returns game
 
         val gameMoveRepository = mockk<GameMoveRepository>()
         val mancalaService = mockk<MancalaService>()
@@ -124,7 +124,7 @@ internal class GameServiceTest() {
     fun `test it should throw InvalidAPIKeyException when game has already started`() {
         val gameRepository = mockk<GameRepository>()
         val game = Game()
-        every { gameRepository.findByUuid(game.uuid) } returns game
+        every { gameRepository.findByUuidPessimistic(game.uuid) } returns game
 
         val gameMoveRepository = mockk<GameMoveRepository>()
         val mancalaService = mockk<MancalaService>()

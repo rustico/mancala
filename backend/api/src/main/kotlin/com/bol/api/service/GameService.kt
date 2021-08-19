@@ -14,6 +14,7 @@ import com.bol.api.repository.GameRepository
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import java.util.UUID
+import javax.transaction.Transactional
 
 @Service
 class GameService(private val gameRepository: GameRepository,
@@ -52,12 +53,13 @@ class GameService(private val gameRepository: GameRepository,
         return gameRepository.save(Game(numberOfStones=numberOfStones)).toNewGameResponse()
     }
 
+    @Transactional()
     fun joinGame(gameUuid: UUID, invitationApiKey: UUID): JoinGameResponse {
         /**
          * PlayerTwo joins the game using his API key [invitationApiKey] sent in the invitation link
          */
         try {
-            val game = gameRepository.findByUuid(gameUuid)
+            val game = gameRepository.findByUuidPessimistic(gameUuid)
 
             if (game.invitationApiKey == null) {
                 throw GameAlreadyStartedException()

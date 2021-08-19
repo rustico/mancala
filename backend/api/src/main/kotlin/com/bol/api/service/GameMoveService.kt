@@ -8,7 +8,6 @@ import com.bol.api.extension.toGameResponse
 import com.bol.api.model.GameMove
 import com.bol.api.repository.GameMoveRepository
 import com.bol.api.repository.GameRepository
-import lib.MancalaGame
 import lib.MancalaPlayer
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
