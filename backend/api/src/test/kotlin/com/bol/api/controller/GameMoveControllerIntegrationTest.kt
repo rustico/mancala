@@ -15,18 +15,18 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.client.ResourceAccessException
-import org.testcontainers.junit.jupiter.Testcontainers
 import java.util.UUID
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-@Testcontainers
+@ActiveProfiles("test")
 class GameMoveControllerIntegrationTest(
     @Autowired val client: TestRestTemplate,
     @Autowired val jdbc: JdbcTemplate
-) : PostgresContainer() {
+) {
     @AfterEach
     fun cleanup() {
         jdbc.execute("delete from games_moves")

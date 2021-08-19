@@ -12,8 +12,6 @@ group = "com.bol"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
-val testcontainersVersion = "1.15.3"
-
 repositories {
     mavenCentral()
 }
@@ -32,9 +30,6 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
-    testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
-    testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     testImplementation("io.mockk:mockk:1.12.0")
 
     implementation(project(":lib"))
