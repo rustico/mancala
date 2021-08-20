@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import java.util.UUID
 import io.mockk.mockk
+import org.springframework.dao.EmptyResultDataAccessException
 
 internal class GameServiceTest() {
 
@@ -50,7 +51,7 @@ internal class GameServiceTest() {
         fun `test it should throw GameNotFoundException when game is not found by its UUID`() {
             val gameRepository = mockk<GameRepository>()
             val game = Game()
-            every { gameRepository.findByUuid(any()) } throws GameNotFoundException()
+            every { gameRepository.findByUuid(any()) } throws EmptyResultDataAccessException(1)
 
             val gameMoveRepository = mockk<GameMoveRepository>()
             every { gameMoveRepository.findAllByGameUuidOrderById(game.uuid)} returns mutableListOf<GameMove>()
