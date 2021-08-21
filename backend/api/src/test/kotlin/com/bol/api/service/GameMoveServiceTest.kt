@@ -11,6 +11,7 @@ import io.mockk.mockk
 import lib.InvalidPlayerTurnException
 import lib.MancalaGame
 import lib.MancalaPlayer
+import lib.MancalaPlayerPit
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -127,5 +128,47 @@ internal class GameMoveServiceTest {
         assertThrows(InvalidAPIKeyException::class.java) {
             gameMoveService.create(newGameMoveRequest)
         }
+    }
+
+    @Test
+    fun `test it should set the Game winner when the game has ended`() {
+        val gameRepository = mockk<GameRepository>()
+        val game = Game()
+        every { gameRepository.findByUuid(game.uuid) } returns game
+        every { gameRepository.save(game) } returns game
+
+        val gameMoveRepository = mockk<GameMoveRepository>()
+        every { gameMoveRepository.findAllByGameUuidOrderById(game.uuid)} returns mutableListOf<GameMove>()
+
+        val gameMove = GameMove(
+            game = game,
+            position = 6
+        )
+        every { gameMoveRepository.save(any()) } returns gameMove
+
+        // Set all PlayerOne pits to zero except the last tone
+        val mancalaGame = MancalaGame()
+        mancalaGame.board[MancalaPlayerPit.First.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Second.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Third.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fourth.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Fifth.index + MancalaPlayer.PlayerOne.index] = 0
+        mancalaGame.board[MancalaPlayerPit.Sixth.index + MancalaPlayer.PlayerOne.index] = 1
+        mancalaGame.playerOneBank = 9
+        mancalaGame.playerTwoBank = 6
+
+        val mancalaService = mockk<MancalaService>()
+        every { mancalaService.getMancalaGame(any(), any()) } returns mancalaGame
+
+        val gameMoveService = GameMoveService(gameMoveRepository, gameRepository, mancalaService)
+        val newGameMoveRequest = NewGameMoveRequest(
+            position = gameMove.position,
+            playerApiKey =  game.playerOneApiKey,
+            gameUuid = game.uuid
+        )
+        val gameResponse = gameMoveService.create(newGameMoveRequest)
+        val expectedGameResponse = game.toGameResponse(mancalaGame)
+        assertNotNull(gameResponse.winner)
+        assertEquals(expectedGameResponse.winner, gameResponse.winner)
     }
 }

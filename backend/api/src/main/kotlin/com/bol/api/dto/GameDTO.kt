@@ -14,7 +14,8 @@ class GameResponse(
     val playerTwoBoard: MutableList<Int>,
     val playerTwoBank: Int,
     val playerTwoId: String,
-    val playerTurn: String
+    val playerTurn: String,
+    val winner: Int?
 )
 
 class SimpleGameResponse(

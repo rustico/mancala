@@ -6,6 +6,7 @@ import com.bol.api.dto.NewGameRequest
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.dto.SimpleGameResponse
 import com.bol.api.utils.shortUuid
+import lib.MancalaPlayer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -79,6 +80,14 @@ class GameControllerIntegrationTest(
         assertNotNull(gameResponse.uuid)
         assertNotNull(gameResponse.createdAt)
         assertNotNull(gameResponse.updatedAt)
+        assertNotNull(gameResponse.playerOneBoard)
+        assertNotNull(gameResponse.playerOneBank)
+        assertNotNull(gameResponse.playerOneId)
+        assertNotNull(gameResponse.playerTwoBoard)
+        assertNotNull(gameResponse.playerTwoBank)
+        assertNotNull(gameResponse.playerTwoId)
+        assertNotNull(gameResponse.playerTurn)
+        assertNull(gameResponse.winner)
     }
 
     @Test
@@ -116,7 +125,7 @@ class GameControllerIntegrationTest(
             JoinGameResponse::class.java)
 
         assertNotNull(joinGameResponse.uuid)
-        assertNotNull(newGameResponse.apiKey)
+        assertNotNull(joinGameResponse.apiKey)
         assertNotNull(joinGameResponse.createdAt)
         assertNotNull(joinGameResponse.updatedAt)
     }

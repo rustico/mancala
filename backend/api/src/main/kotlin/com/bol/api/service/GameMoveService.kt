@@ -12,6 +12,7 @@ import lib.MancalaPlayer
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.stereotype.Service
 import java.util.UUID
+import javax.transaction.Transactional
 
 @Service
 class GameMoveService(
@@ -28,6 +29,7 @@ class GameMoveService(
             .mapIndexed() { index, gameMove -> gameMove.toGameMoveResponse(index) }
     }
 
+    @Transactional
     fun create(newGameMoveRequest: NewGameMoveRequest): GameResponse {
         /**
          * Creates a new move in the Game
@@ -57,6 +59,11 @@ class GameMoveService(
             )
 
             gameMoveRepository.save(gameMove)
+
+            if (mancalaGame.hasEnded()) {
+                game.winner = if (mancalaGame.playerOneBank > mancalaGame.playerTwoBank) 1 else 2
+                gameRepository.save(game)
+            }
 
             return game.toGameResponse(mancalaGame)
         } catch (e: EmptyResultDataAccessException) {

@@ -19,7 +19,8 @@ fun Game.toGameResponse(mancalaGame: MancalaGame) = GameResponse(
     playerTwoBoard = mancalaGame.playerTwoBoard,
     playerTwoBank = mancalaGame.playerTwoBank,
     playerTwoId = shortUuid(playerTwoApiKey),
-    playerTurn = if (mancalaGame.playerTurn == MancalaPlayer.PlayerOne) shortUuid(playerOneApiKey) else shortUuid(playerTwoApiKey)
+    playerTurn = if (mancalaGame.playerTurn == MancalaPlayer.PlayerOne) shortUuid(playerOneApiKey) else shortUuid(playerTwoApiKey),
+    winner = winner
 )
 
 fun Game.toSimpleGameResponse() = SimpleGameResponse(
