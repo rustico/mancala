@@ -1,0 +1,21 @@
+@startuml
+actor PlayerOne
+actor PlayerTwo
+participant Frontend
+participant API
+database DB
+
+PlayerOne -> Frontend: Creates new game
+Frontend -> API: Sends POST request creating a new game
+Frontend <- API: Returns Game UUID, PlayerOne API key and InvitationKey
+PlayerOne <- Frontend: Shows InvitationLink
+API -> DB: Saves new Game
+PlayerOne -> PlayerTwo: Sends InvitiationLink
+PlayerTwo -> Frontend: Enters site with the InvitationLink
+Frontend -> API: Sends Request asking to allow PlayerTwo to join Game
+API -> DB: Updates Game removing the InvitationKey
+Frontend <- API: Returns PlayerTwo API key
+Frontend <- API: Via Websockets sends the board status to start playing
+PlayerTwo <- Frontend: Shows Mancala Board to start playing
+PlayerOne <- Frontend: Shows Mancala Board to start playing
+@enduml

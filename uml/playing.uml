@@ -1,0 +1,14 @@
+@startuml
+actor PlayerOne
+actor PlayerTwo
+participant Frontend
+participant API
+database DB
+
+PlayerOne -> Frontend: Chooses a pit
+Frontend -> API: Sends a POST request playing a new move
+API -> DB: Saves new GameMove
+Frontend <- API: Via Websockets sends the new board
+PlayerOne <- Frontend: Shows new Mancala Board
+PlayerTwo <- Frontend: Shows new Mancala Board
+@enduml
