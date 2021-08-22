@@ -37,6 +37,7 @@ class MancalaGame (
 ) {
     // We divide the main board in two.
     // Each bank contains the stones that a player has.
+    // TODO: refactor board into a class
     private val playerOneBankIndex = 6
     var playerOneBank: Int
         get() = board[playerOneBankIndex]
