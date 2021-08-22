@@ -13,7 +13,7 @@ The game is divided in two projects
 psql> create database mancala;
 ```
 
-2) Run backend server
+2) Run backend server on port 8081
 
 ```sh
 backend$ ./gradelw tasks bootRun
@@ -21,7 +21,7 @@ backend$ ./gradelw tasks bootRun
 
 You can override default values using environment variables.
 
-3) Run frontend server
+3) Run frontend server on port 8080
 
 ```sh
 frontend$ npm install
@@ -75,7 +75,6 @@ It will start a local server in the port `8081`
 
 ```sh
 backend$ ./gradelw tasks bootRun
-backend> .\gradelw.bat tasks bootRun
 ```
 
 You can override it setting the `env` variable `APP_PORT`
@@ -84,7 +83,6 @@ You can override it setting the `env` variable `APP_PORT`
 
 ```sh
 backend$ ./gradelw test --info
-backend> .\gradelw.bat test --info
 ```
 
 ### Swagger
@@ -105,6 +103,7 @@ Is a `Vue.js` applications that consumes the data from the `api` and allows a us
 It will start a local server in the port `8080`
 
 ```sh
+frontend$ npm install
 frontend$ npm run serve
 ```
 
