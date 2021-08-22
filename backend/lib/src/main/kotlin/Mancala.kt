@@ -3,7 +3,7 @@ package lib
 /**
  * Main game logic of Mancala.
  *
- * We have a board of twelve pits and two banks (bit pits "[0]") in each side where the stones are collected.
+ * We have a board of twelve pits and two banks in each side where the stones are collected.
  * Each pit has 6 stones in it and the banks starts without any stone.
  *
  *        Player one
@@ -11,7 +11,7 @@ package lib
  *       6, 6, 6, 6, 6, 6  [0]
  *        Player two
  *
- * This board is represented in a mutable list of integers: [6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0]
+ * This board is represented as a mutable list of integers: [6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0]
  *
  * The representation of the list indexes in the board would be:
  *
@@ -19,13 +19,24 @@ package lib
  *  [6]  5, 4, 3, 2,   1, 0,
  *       7, 8, 9, 10, 11, 12  [13]
  *        Player two
+ *
+ * The goal of the game is to have the maximum number of stones in a players bank.
+ *
+ * The rules of the game are:
+ *
+ * 1 - A player chooses a pit with stones in it
+ * 2 - Each stone is distributed in the following pits, even in his bank but not in the opposite players bank.
+ * 3 - If the last stone lands in his bank it is rewarded with another turn
+ * 4 - If the last stone lands in a pit of his empty it captures all the stones in the opposite pit and puts them in his
+ * bank with his last stone.
+ * 5 - The game ends when a player empties his board. The remaining stones in the opposite board are captures by this opponent.
  */
 class MancalaGame (
     var playerTurn: MancalaPlayer = MancalaPlayer.PlayerOne,
     val numberOfStones : Int = 6
 ) {
     // We divide the main board in two.
-    // Each banks contains the total stones that a player has.
+    // Each bank contains the stones that a player has.
     private val playerOneBankIndex = 6
     var playerOneBank: Int
         get() = board[playerOneBankIndex]
@@ -93,7 +104,8 @@ class MancalaGame (
         /**
          * Calls [choosePit] with the player in [playerTurn]
          *
-         * It's a nice method to have to fill automatically the history of the game
+         * It's a nice method to have to fill automatically the history of the game without the need to specify
+         * the player
          */
 
         choosePitIndex(pitIndex, playerTurn)
@@ -153,7 +165,7 @@ class MancalaGame (
 
     fun hasEnded(): Boolean {
         /**
-         * Return if a game has ended. One of the player should have zero stones in its board
+         * Returns if a game has ended. One of the player should have zero stones in its board
          */
         return playerOneBoard.sum() == 0 || playerTwoBoard.sum() == 0
     }
