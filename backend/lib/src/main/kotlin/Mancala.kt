@@ -68,15 +68,15 @@ class MancalaGame (
         }
         val lastPitIndex = distributeStones(player, pit.index + player.index)
 
+        checkAndCaptureStones(lastPitIndex, player)
+
+        // If last pit was not in the [player] own bank we change the turn to the other player
+        if(!(pitIsAPlayerBank(lastPitIndex) && pitIsInPlayerBoard(lastPitIndex, player))) {
+            playerTurn = if(player == MancalaPlayer.PlayerOne) MancalaPlayer.PlayerTwo else MancalaPlayer.PlayerOne
+        }
+
         if (hasEnded()) {
             collectStones()
-        } else {
-            checkAndCaptureStones(lastPitIndex, player)
-
-            // If last pit was not in the [player] own bank we change the turn to the other player
-            if(!(pitIsAPlayerBank(lastPitIndex) && pitIsInPlayerBoard(lastPitIndex, player))) {
-                playerTurn = if(player == MancalaPlayer.PlayerOne) MancalaPlayer.PlayerTwo else MancalaPlayer.PlayerOne
-            }
         }
     }
 
