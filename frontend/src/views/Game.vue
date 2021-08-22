@@ -8,7 +8,7 @@
       :isPlayerTwo="isPlayerTwo"
     ></MancalaBoard>
 
-    <div v-if='isPlayer && !invitationLink'>
+    <div v-if='isPlayer && !invitationLink && winner === null'>
       <div class="choosePitText">Choose a pit to move stones</div>
       <div class="choosePit"> 
           <button :disabled="!isPlayerTurn" id="send" class="choosePitButton" type="button" @click="send(1)" 
@@ -26,7 +26,15 @@
       </div>
     </div>
 
-    <div class="notYourTurn" v-if="isPlayer && !isPlayerTurn">Not your turn</div>
+    <div class="winner" v-if="winner === 1">
+      The winner is PlayerOne
+    </div>
+
+    <div class="winner" v-if="winner === 2">
+      The winner is PlayerTwo
+    </div>
+
+    <div class="notYourTurn" v-if="isPlayer && !isPlayerTurn && winner === null">Not your turn</div>
 
     <div class="invitation" v-if="invitationLink">
       <span class="inviteLinkText"> Please invite a friend to start playing</span>
@@ -95,7 +103,8 @@ export default {
           this.oppositeBank = data.playerTwoBank;
         }
 
-        this.isPlayerTurn = localStorage.apiKey.substring(0, 9) == data.playerTurn
+        this.isPlayerTurn = localStorage.apiKey.substring(0, 9) == data.playerTurn;
+        this.winner = data.winner;
     },
     copyLink() {
       navigator.clipboard.writeText(this.invitationLink);
@@ -183,6 +192,11 @@ export default {
 }
 
 .notYourTurn {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.winner {
   margin-top: 10px;
   font-weight: bold;
 }

@@ -61,6 +61,7 @@ class GameMoveService(
             gameMoveRepository.save(gameMove)
 
             if (mancalaGame.hasEnded()) {
+                // TODO: refactor
                 game.winner = if (mancalaGame.playerOneBank > mancalaGame.playerTwoBank) 1 else 2
                 gameRepository.save(game)
             }
