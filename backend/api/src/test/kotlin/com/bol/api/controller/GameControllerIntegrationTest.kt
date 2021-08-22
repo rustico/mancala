@@ -1,21 +1,25 @@
 package com.bol.api.controller
 
 import com.bol.api.dto.GameResponse
+import com.bol.api.dto.JoinGameRequest
 import com.bol.api.dto.JoinGameResponse
 import com.bol.api.dto.NewGameRequest
 import com.bol.api.dto.NewGameResponse
 import com.bol.api.dto.SimpleGameResponse
+import com.bol.api.service.InvalidAPIKeyException
 import com.bol.api.utils.shortUuid
-import lib.MancalaPlayer
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.web.client.ResourceAccessException
 import java.util.UUID
 
 
@@ -120,9 +124,15 @@ class GameControllerIntegrationTest(
 
 
         // Join game
-        val joinGameResponse = client.getForObject(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+        val joinGameRequest = HttpEntity(JoinGameRequest(newGameResponse.invitationApiKey))
+
+        val response = client.exchange(
+            "/games/${newGameResponse.uuid}",
+            HttpMethod.PUT,
+            joinGameRequest,
             JoinGameResponse::class.java)
+
+        val joinGameResponse = response.body!!
 
         assertNotNull(joinGameResponse.uuid)
         assertNotNull(joinGameResponse.apiKey)
@@ -143,16 +153,22 @@ class GameControllerIntegrationTest(
 
 
         // Join game
-        client.getForObject(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+        val joinGameRequest = HttpEntity(JoinGameRequest(newGameResponse.invitationApiKey))
+
+        client.exchange(
+            "/games/${newGameResponse.uuid}",
+            HttpMethod.PUT,
+            joinGameRequest,
             JoinGameResponse::class.java)
 
         // Join Again
-        val response = client.getForEntity(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
-            String::class.java)
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+        assertThrows(ResourceAccessException::class.java) {
+            client.exchange(
+                "/games/${newGameResponse.uuid}",
+                HttpMethod.PUT,
+                joinGameRequest,
+                JoinGameResponse::class.java)
+        }
     }
 
     @Test
@@ -168,11 +184,15 @@ class GameControllerIntegrationTest(
 
 
         // Join game
-        val response = client.getForEntity(
-            "/games/${newGameResponse.uuid}/join/${UUID.randomUUID()}",
-            String::class.java)
+        val joinGameRequest = HttpEntity(JoinGameRequest(UUID.randomUUID()))
 
-        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+        assertThrows(ResourceAccessException::class.java) {
+            client.exchange(
+                "/games/${newGameResponse.uuid}",
+                HttpMethod.PUT,
+                joinGameRequest,
+                JoinGameResponse::class.java)
+        }
     }
 
     @Test
@@ -188,8 +208,12 @@ class GameControllerIntegrationTest(
 
 
         // Join game
-        val response = client.getForEntity(
-            "/games/${UUID.randomUUID()}/join/${newGameResponse.invitationApiKey}",
+        val joinGameRequest = HttpEntity(JoinGameRequest(newGameResponse.invitationApiKey))
+
+        val response = client.exchange(
+            "/games/${UUID.randomUUID()}",
+            HttpMethod.PUT,
+            joinGameRequest,
             String::class.java)
 
         assertEquals(HttpStatus.NOT_FOUND, response.statusCode)
@@ -227,9 +251,15 @@ class GameControllerIntegrationTest(
             NewGameResponse::class.java)
 
         // Join game
-        val joinGameResponse = client.getForObject(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+        val joinGameRequest = HttpEntity(JoinGameRequest(newGameResponse.invitationApiKey))
+
+        val response = client.exchange(
+            "/games/${newGameResponse.uuid}",
+            HttpMethod.PUT,
+            joinGameRequest,
             JoinGameResponse::class.java)
+
+        val joinGameResponse = response.body!!
 
         val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)
 
@@ -249,8 +279,12 @@ class GameControllerIntegrationTest(
             NewGameResponse::class.java)
 
         // Join game
-        client.getForObject(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+        val joinGameRequest = HttpEntity(JoinGameRequest(newGameResponse.invitationApiKey))
+
+        client.exchange(
+            "/games/${newGameResponse.uuid}",
+            HttpMethod.PUT,
+            joinGameRequest,
             JoinGameResponse::class.java)
 
         val gameResponse = client.getForObject("/games/${newGameResponse.uuid}", GameResponse::class.java)

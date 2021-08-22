@@ -2,6 +2,7 @@ package com.bol.api.controller
 
 import com.bol.api.dto.GameMoveResponse
 import com.bol.api.dto.GameResponse
+import com.bol.api.dto.JoinGameRequest
 import com.bol.api.dto.JoinGameResponse
 import org.junit.jupiter.api.Assertions.*
 import com.bol.api.dto.NewGameMoveRequest
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
@@ -270,9 +273,15 @@ class GameMoveControllerIntegrationTest(
             NewGameResponse::class.java)
 
         // Join game
-        val joinGameResponse = client.getForObject(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+        val joinGameRequest = HttpEntity(JoinGameRequest(newGameResponse.invitationApiKey))
+
+        val response = client.exchange(
+            "/games/${newGameResponse.uuid}",
+            HttpMethod.PUT,
+            joinGameRequest,
             JoinGameResponse::class.java)
+
+        val joinGameResponse = response.body!!
 
         // Create a move
         val newGameMoveRequest = NewGameMoveRequest(
@@ -303,8 +312,12 @@ class GameMoveControllerIntegrationTest(
             NewGameResponse::class.java)
 
         // Join game
-        client.getForObject(
-            "/games/${newGameResponse.uuid}/join/${newGameResponse.invitationApiKey}",
+        val joinGameRequest = HttpEntity(JoinGameRequest(newGameResponse.invitationApiKey))
+
+        client.exchange(
+            "/games/${newGameResponse.uuid}",
+            HttpMethod.PUT,
+            joinGameRequest,
             JoinGameResponse::class.java)
 
         // Create a move

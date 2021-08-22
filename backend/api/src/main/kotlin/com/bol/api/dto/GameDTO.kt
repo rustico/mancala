@@ -42,3 +42,7 @@ class JoinGameResponse(
     val createdAt: LocalDateTime?,
     val updatedAt: LocalDateTime?
 )
+
+class JoinGameRequest(
+    val invitationApiKey: UUID
+)
