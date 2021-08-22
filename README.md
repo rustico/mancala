@@ -5,6 +5,29 @@ The game is divided in two projects
 - Backend
 - Frontend
 
+## Quick setup
+
+1) Create a database in PostgresSQL
+
+```sql
+psql> create database mancala;
+```
+
+2) Run backend server
+
+```sh
+backend$ ./gradelw tasks bootRun
+```
+
+You can override default values using environment variables.
+
+3) Run frontend server
+
+```sh
+frontend$ npm install
+frontend$ npm run serve
+```
+
 ## Backend
 
 Is a `Java/Kotlin spring-boot`  application that consists of two modules. One is the `lib` that has all the game logic and the other one is the REST `api` implementation.
@@ -37,6 +60,14 @@ database name: mancala-test
 username: postgres
 password: postgres
 ```
+
+### Environment variables
+
+- APP_PORT
+- DB_HOST
+- DB_NAME
+- DB_USERNAME
+- DB_PASSWORD
 
 ### How to run it locally
 
