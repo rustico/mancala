@@ -116,6 +116,7 @@ It will start a local server in the port `8080`
 
 ```sh
 frontend$ npm install
+frontend$ export NODE_OPTIONS=--openssl-legacy-provider
 frontend$ npm run serve
 ```
 
