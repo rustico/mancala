@@ -17,8 +17,6 @@ The game is divided in two projects
 
 ## Quick setup
 
-## Quick setup
-
 1) Create a database in PostgresSQL
 
 ```sql
