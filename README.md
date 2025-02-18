@@ -1,9 +1,21 @@
 # Mancala
 
+![Mancala](mancala.png)
+
 The game is divided in two projects
 
 - Backend
 - Frontend
+
+## Use Cases
+
+1. **Playing Mancala**: Users can play a game of Mancala either individually or by watching how two players play the game.
+2. **Backend**: Provides the game logic and a REST API to interact with the frontend.
+3. **Frontend**: Is a Vue.js application that consumes the backend API and allows users to interact with the game.
+4. **Quick Setup**: Users can quickly set up the development environment by creating a PostgreSQL database and running the backend and frontend servers.
+5. **Testing**: The project includes tests that can be run to ensure the correct functioning of the game logic.
+
+## Quick setup
 
 ## Quick setup
 
